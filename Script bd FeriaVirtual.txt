@@ -1,0 +1,269 @@
+--EJECUTAR ESTE CODIGO CON EL USUARIO SYS
+ALTER SESSION SET "_ORACLE_SCRIPT"=TRUE;
+DROP USER FeriaVirtual CASCADE ;
+
+CREATE USER FeriaVirtual IDENTIFIED BY FeriaVirtual;
+GRANT DBA TO FeriaVirtual;
+
+CREATE TABLE contrato (
+    idcontrato        INTEGER NOT NULL,
+    fechacreacion     DATE NOT NULL,
+    fechatermino      DATE NOT NULL,
+    usuario_idusuario INTEGER NOT NULL
+);
+
+ALTER TABLE contrato ADD CONSTRAINT contrato_pk PRIMARY KEY ( idcontrato );
+
+CREATE TABLE estoferp (
+    idestoferp  INTEGER NOT NULL,
+    descripcion VARCHAR2(150) NOT NULL
+);
+
+ALTER TABLE estoferp ADD CONSTRAINT estoferp_pk PRIMARY KEY ( idestoferp );
+
+CREATE TABLE estofertrans (
+    idestofertrans INTEGER NOT NULL,
+    descripcion    VARCHAR2(150) NOT NULL
+);
+
+ALTER TABLE estofertrans ADD CONSTRAINT estofertrans_pk PRIMARY KEY ( idestofertrans );
+
+CREATE TABLE estpago (
+    idestpago   INTEGER NOT NULL,
+    descripcion VARCHAR2(150) NOT NULL
+);
+
+ALTER TABLE estpago ADD CONSTRAINT estpago_pk PRIMARY KEY ( idestpago );
+
+CREATE TABLE estpedido (
+    idestpedido INTEGER NOT NULL,
+    descripcion VARCHAR2(150) NOT NULL
+);
+
+ALTER TABLE estpedido ADD CONSTRAINT estpedido_pk PRIMARY KEY ( idestpedido );
+
+CREATE TABLE estsubasta (
+    idestsubasta INTEGER NOT NULL,
+    descripcion  VARCHAR2(150) NOT NULL
+);
+
+ALTER TABLE estsubasta ADD CONSTRAINT estsubasta_pk PRIMARY KEY ( idestsubasta );
+
+CREATE TABLE estventa (
+    idestventa  INTEGER NOT NULL,
+    descripcion VARCHAR2(150) NOT NULL
+);
+
+ALTER TABLE estventa ADD CONSTRAINT estventa_pk PRIMARY KEY ( idestventa );
+
+CREATE TABLE ofertaprod (
+    idofertaprod        INTEGER NOT NULL,
+    nombre              VARCHAR2(150 CHAR) NOT NULL,
+    preciounidad        INTEGER NOT NULL,
+    kgunidad            INTEGER NOT NULL,
+    cantidadoferta      INTEGER NOT NULL,
+    fechacosecha        DATE NOT NULL,
+    fechacaducidad      DATE NOT NULL,
+    pedido_idpedido     INTEGER NOT NULL,
+    estoferp_idestoferp INTEGER NOT NULL
+);
+
+ALTER TABLE ofertaprod ADD CONSTRAINT ofertaprod_pk PRIMARY KEY ( idofertaprod );
+
+CREATE TABLE ofertatrans (
+    idofertatrans               INTEGER NOT NULL,
+    preciooferta                INTEGER NOT NULL,
+    cantidadtransporte          INTEGER NOT NULL,
+    fechaentrega                DATE NOT NULL,
+    subastatrans_idsubastatrans INTEGER NOT NULL,
+    estofertrans_idestofertrans INTEGER NOT NULL,
+    transporte_patente          VARCHAR2(150) NOT NULL
+);
+
+ALTER TABLE ofertatrans ADD CONSTRAINT ofertatrans_pk PRIMARY KEY ( idofertatrans );
+
+CREATE TABLE pago (
+    idpago                  INTEGER NOT NULL,
+    montototal              INTEGER NOT NULL,
+    fechapago               DATE NOT NULL,
+    estpago_idestpago       INTEGER NOT NULL,
+    pedido_idpedido         INTEGER,
+    ventalocal_idventalocal INTEGER
+);
+
+ALTER TABLE pago ADD CONSTRAINT pago_pk PRIMARY KEY ( idpago );
+
+CREATE TABLE pedido (
+    idpedido              INTEGER NOT NULL,
+    fechasolicitud        DATE NOT NULL,
+    nombreproducto        VARCHAR2(150) NOT NULL,
+    cantidadsolicitada    INTEGER NOT NULL,
+    kgunidad              INTEGER NOT NULL,
+    preciomaximo          INTEGER NOT NULL,
+    estpedido_idestpedido INTEGER NOT NULL,
+    usuario_idusuario     INTEGER NOT NULL
+);
+
+ALTER TABLE pedido ADD CONSTRAINT pedido_pk PRIMARY KEY ( idpedido );
+
+CREATE TABLE rol (
+    idrol       INTEGER NOT NULL,
+    descripcion VARCHAR2(150 CHAR) NOT NULL
+);
+
+ALTER TABLE rol ADD CONSTRAINT rol_pk PRIMARY KEY ( idrol );
+
+CREATE TABLE subastatrans (
+    idsubastatrans          INTEGER NOT NULL,
+    fechasubasta            DATE NOT NULL,
+    pedido_idpedido         INTEGER,
+    ventalocal_idventalocal INTEGER,
+    tiporefrig_idtiporefrig INTEGER NOT NULL,
+    tipotrans_idtipotrans   INTEGER NOT NULL,
+    estsubasta_idestsubasta INTEGER NOT NULL
+);
+
+ALTER TABLE subastatrans ADD CONSTRAINT subastatrans_pk PRIMARY KEY ( idsubastatrans );
+
+CREATE TABLE tiporefrig (
+    idtiporefrig INTEGER NOT NULL,
+    descripcion  VARCHAR2(150) NOT NULL
+);
+
+ALTER TABLE tiporefrig ADD CONSTRAINT tiporefrig_pk PRIMARY KEY ( idtiporefrig );
+
+CREATE TABLE tipotrans (
+    idtipotrans INTEGER NOT NULL,
+    descripcion VARCHAR2(150 CHAR) NOT NULL
+);
+
+ALTER TABLE tipotrans ADD CONSTRAINT tipotrans_pk PRIMARY KEY ( idtipotrans );
+
+CREATE TABLE transporte (
+    patente                 VARCHAR2(150) NOT NULL,
+    tamanio                 VARCHAR2(150) NOT NULL,
+    capacidadcarga          INTEGER NOT NULL,
+    actividad               CHAR(1) NOT NULL,
+    tiporefrig_idtiporefrig INTEGER NOT NULL,
+    tipotrans_idtipotrans   INTEGER NOT NULL,
+    usuario_idusuario       INTEGER NOT NULL
+);
+
+ALTER TABLE transporte ADD CONSTRAINT transporte_pk PRIMARY KEY ( patente );
+
+CREATE TABLE usuario (
+    idusuario   INTEGER NOT NULL,
+    rut         VARCHAR2(50 CHAR) NOT NULL,
+    nombre      VARCHAR2(255) NOT NULL,
+    apellidos   VARCHAR2(255) NOT NULL,
+    email       VARCHAR2(255) NOT NULL,
+    contrasenia VARCHAR2(255) NOT NULL,
+    actividad   CHAR(1) NOT NULL,
+    dirección   VARCHAR2(255 CHAR),
+    telefono    VARCHAR2(150 CHAR),
+    rol_idrol   INTEGER NOT NULL
+);
+
+ALTER TABLE usuario ADD CONSTRAINT usuario_pk PRIMARY KEY ( idusuario );
+
+CREATE TABLE ventalocal (
+    idventalocal            INTEGER NOT NULL,
+    montototal              INTEGER NOT NULL,
+    ofertaprod_idofertaprod INTEGER NOT NULL,
+    usuario_idusuario       INTEGER NOT NULL,
+    estventa_idestventa     INTEGER NOT NULL
+);
+
+ALTER TABLE ventalocal ADD CONSTRAINT ventalocal_pk PRIMARY KEY ( idventalocal );
+
+ALTER TABLE contrato
+    ADD CONSTRAINT contrato_usuario_fk FOREIGN KEY ( usuario_idusuario )
+        REFERENCES usuario ( idusuario );
+
+ALTER TABLE ofertaprod
+    ADD CONSTRAINT ofertaprod_estoferp_fk FOREIGN KEY ( estoferp_idestoferp )
+        REFERENCES estoferp ( idestoferp );
+
+ALTER TABLE ofertaprod
+    ADD CONSTRAINT ofertaprod_pedido_fk FOREIGN KEY ( pedido_idpedido )
+        REFERENCES pedido ( idpedido );
+
+ALTER TABLE ofertatrans
+    ADD CONSTRAINT ofertatrans_estofertrans_fk FOREIGN KEY ( estofertrans_idestofertrans )
+        REFERENCES estofertrans ( idestofertrans );
+
+ALTER TABLE ofertatrans
+    ADD CONSTRAINT ofertatrans_subastatrans_fk FOREIGN KEY ( subastatrans_idsubastatrans )
+        REFERENCES subastatrans ( idsubastatrans );
+
+ALTER TABLE ofertatrans
+    ADD CONSTRAINT ofertatrans_transporte_fk FOREIGN KEY ( transporte_patente )
+        REFERENCES transporte ( patente );
+
+ALTER TABLE pago
+    ADD CONSTRAINT pago_estpago_fk FOREIGN KEY ( estpago_idestpago )
+        REFERENCES estpago ( idestpago );
+
+ALTER TABLE pago
+    ADD CONSTRAINT pago_pedido_fk FOREIGN KEY ( pedido_idpedido )
+        REFERENCES pedido ( idpedido );
+
+ALTER TABLE pago
+    ADD CONSTRAINT pago_ventalocal_fk FOREIGN KEY ( ventalocal_idventalocal )
+        REFERENCES ventalocal ( idventalocal );
+
+ALTER TABLE pedido
+    ADD CONSTRAINT pedido_estpedido_fk FOREIGN KEY ( estpedido_idestpedido )
+        REFERENCES estpedido ( idestpedido );
+
+ALTER TABLE pedido
+    ADD CONSTRAINT pedido_usuario_fk FOREIGN KEY ( usuario_idusuario )
+        REFERENCES usuario ( idusuario );
+
+ALTER TABLE subastatrans
+    ADD CONSTRAINT subastatrans_estsubasta_fk FOREIGN KEY ( estsubasta_idestsubasta )
+        REFERENCES estsubasta ( idestsubasta );
+
+ALTER TABLE subastatrans
+    ADD CONSTRAINT subastatrans_pedido_fk FOREIGN KEY ( pedido_idpedido )
+        REFERENCES pedido ( idpedido );
+
+ALTER TABLE subastatrans
+    ADD CONSTRAINT subastatrans_tiporefrig_fk FOREIGN KEY ( tiporefrig_idtiporefrig )
+        REFERENCES tiporefrig ( idtiporefrig );
+
+ALTER TABLE subastatrans
+    ADD CONSTRAINT subastatrans_tipotrans_fk FOREIGN KEY ( tipotrans_idtipotrans )
+        REFERENCES tipotrans ( idtipotrans );
+
+ALTER TABLE subastatrans
+    ADD CONSTRAINT subastatrans_ventalocal_fk FOREIGN KEY ( ventalocal_idventalocal )
+        REFERENCES ventalocal ( idventalocal );
+
+ALTER TABLE transporte
+    ADD CONSTRAINT transporte_tiporefrig_fk FOREIGN KEY ( tiporefrig_idtiporefrig )
+        REFERENCES tiporefrig ( idtiporefrig );
+
+ALTER TABLE transporte
+    ADD CONSTRAINT transporte_tipotrans_fk FOREIGN KEY ( tipotrans_idtipotrans )
+        REFERENCES tipotrans ( idtipotrans );
+
+ALTER TABLE transporte
+    ADD CONSTRAINT transporte_usuario_fk FOREIGN KEY ( usuario_idusuario )
+        REFERENCES usuario ( idusuario );
+
+ALTER TABLE usuario
+    ADD CONSTRAINT usuario_rol_fk FOREIGN KEY ( rol_idrol )
+        REFERENCES rol ( idrol );
+
+ALTER TABLE ventalocal
+    ADD CONSTRAINT ventalocal_estventa_fk FOREIGN KEY ( estventa_idestventa )
+        REFERENCES estventa ( idestventa );
+
+ALTER TABLE ventalocal
+    ADD CONSTRAINT ventalocal_ofertaprod_fk FOREIGN KEY ( ofertaprod_idofertaprod )
+        REFERENCES ofertaprod ( idofertaprod );
+
+ALTER TABLE ventalocal
+    ADD CONSTRAINT ventalocal_usuario_fk FOREIGN KEY ( usuario_idusuario )
+        REFERENCES usuario ( idusuario );

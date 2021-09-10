@@ -1,0 +1,24 @@
+{
+  "name": "FeriaVirtualApi",
+  "version": "1.0.0",
+  "description": "Api de aplicacion FeriaVirtualApp",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EgamiDark/FeriaVirtualApi.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EgamiDark/FeriaVirtualApi/issues"
+  },
+  "homepage": "https://github.com/EgamiDark/FeriaVirtualApi#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "oracledb": "^5.2.0"
+  }
+}
