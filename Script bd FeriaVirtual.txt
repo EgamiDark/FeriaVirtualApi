@@ -313,6 +313,7 @@ INSERT INTO ROL (idrol,descripcion) VALUES(2,'TRANSPORTISTA');
 INSERT INTO ROL (idrol,descripcion) VALUES(3,'PRODUCTOR');
 INSERT INTO ROL (idrol,descripcion) VALUES(4,'CLIENTE_EXTERNO');
 INSERT INTO ROL (idrol,descripcion) VALUES(5,'CLIENTE_LOCAL');
+INSERT INTO ROL (idrol,descripcion) VALUES(6,'CONSULTOR');
 
 INSERT INTO USUARIO VALUES(1,'19956167-7','MATIAS','SAN MARTIN SALINAS','ma.sanmartins@duocuc.cl','123456',1,'Las araucarias 0287','+56958219103',1);
 

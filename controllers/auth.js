@@ -52,15 +52,16 @@ exports.registro = async (req, res) => {
         ${user.idRol})`,
       async (err, response) => {
         await closeBD(cone);
-        if (err)
-        console.log(err)
-        res.json({
+        if (err){
+          console.log(err)
+          res.json({
             success:false,
             msg:""+err
-        });
+          });
+        }
         if (response) res.json({
-            success:true,
-            msg:"Usuario Creado Correctamente"
+          success:true,
+          msg:"Usuario Creado Correctamente"
         });
       }
     );
