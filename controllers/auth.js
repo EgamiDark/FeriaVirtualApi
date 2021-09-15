@@ -33,7 +33,7 @@ exports.login = async (req, res) => {
 };
 
 //REGISTRAR USUARIO
-exports.registro = async (req, res) => {
+/*exports.registro = async (req, res) => {
   try {
     let user = req.body;
     const cone = await openBD();
@@ -86,35 +86,58 @@ exports.registro = async (req, res) => {
           });
       });
     console.log(result)
-    /* cone.execute(
-      `CALL PKG_METODOS.INSERTAR_USUARIO
-      (
-        '${user.rut}',
-        '${user.nombre}',
-        '${user.apellidos}',
-        '${user.email}',
-        '${user.contrasenia}',
-        1,
-        '${user.direccion}',
-        '${user.telefono}',
-        ${user.idRol})`,
+  } catch (error) {
+    return res.json(error);
+  }
+};*/
+
+exports.registro = async (req, res) => {
+  try {
+    let user = req.body;
+    const cone = await openBD();
+
+    sql = `begin PKG_METODOS.INSERTAR_USUARIO(
+      :V_RUT,
+      :V_NOMBRE,
+      :V_APELLIDOS ,
+      :V_EMAIL,
+      :V_CONTRASENIA,
+      :V_DIRECCION,
+      :V_TELEFONO,
+      :V_ID_ROL); end;`;
+      
+    const data = {
+      V_RUT: user.rut,
+      V_NOMBRE: user.nombre,
+      V_APELLIDOS: user.apellidos,
+      V_EMAIL: user.email,
+      V_CONTRASENIA: user.contrasenia,
+      V_DIRECCION: user.direccion,
+      V_TELEFONO: user.telefono,
+      V_ID_ROL: user.idRol,
+    };
+
+    result = cone.execute(sql, data,
       async (err, response) => {
         await closeBD(cone);
-        if (err){
-          console.log(err)
+        if (err) {
+          console.log(err);
           res.json({
-            success:false,
-            msg:""+err,
-            user
+            success: false,
+            msg: "" + err,
+            errorNum:err.errorNum
           });
         }
-        if (response) res.json({
-          success:true,
-          msg:"Usuario Creado Correctamente: " 
-        });
-      } 
-    );*/
+        if (response)
+          console.log(response)
+          res.json({
+            success: true,
+            msg: "Usuario Creado Correctamente: ",
+            response
+          });
+      });
   } catch (error) {
     return res.json(error);
   }
 };
+
