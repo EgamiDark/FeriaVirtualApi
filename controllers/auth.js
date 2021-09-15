@@ -1,14 +1,38 @@
+const oracledb = require("oracledb");
 const { openBD, closeBD } = require("../connection");
 
 //CONSULTAR TODOS LOS ROLES
 exports.getRol = async (req, res) => {
   try {
     const cone = await openBD();
-    cone.execute(`SELECT * FROM ROL`, async (err, response) => {
-      await closeBD(cone);
-      if (err) console.log(err);
-      if (response) res.json(response.rows);
-    });
+    sql = `begin PKG_METODOS.OBTENER_ROLES(:cursor); end;`;
+
+    const data = {
+      cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
+    };
+
+    const result = await cone.execute(sql, data);
+    const resultSet = result.outBinds.cursor;
+    console.log(resultSet);
+
+    const rows = await resultSet.getRows();
+    console.log(rows);
+
+    if(rows){
+      res.json({
+        success: true,
+        msg: "Roles obtenidos correctamente",
+        rows,
+      });
+    }else{
+      res.json({
+        success: false,
+        msg: "" + err,
+        errorNum: err.errorNum,
+      });
+    }
+
+    await closeBD(cone);
   } catch (error) {
     return res.json(error);
   }
@@ -32,65 +56,6 @@ exports.login = async (req, res) => {
   }
 };
 
-//REGISTRAR USUARIO
-/*exports.registro = async (req, res) => {
-  try {
-    let user = req.body;
-    const cone = await openBD();
-
-    sql = `begin PKG_METODOS.INSERTAR_USUARIO(
-      :V_RESPUESTA,
-      :return_code,
-      :return_message,
-      :V_RUT,
-      :V_NOMBRE,
-      :V_APELLIDOS ,
-      :V_EMAIL,
-      :V_CONTRASENIA,
-      :V_ACTIVIDAD,
-      :V_DIRECCION,
-      :V_TELEFONO,
-      :V_ROL); end;`;
-      
-    const data = {
-      V_RESPUESTA: 0,
-      return_code: 0,
-      return_message: '',
-      V_RUT: user.rut,
-      V_NOMBRE: user.nombre,
-      V_APELLIDOS: user.apellidos,
-      V_EMAIL: user.email,
-      V_CONTRASENIA: user.contrasenia,
-      V_ACTIVIDAD: '1',
-      V_DIRECCION: user.direccion,
-      V_TELEFONO: user.telefono,
-      V_ROL: user.idRol,
-    };
-
-    const binds = Object.assign({}, data);
-    result = cone.execute(sql, binds,
-      async (err, response) => {
-        await closeBD(cone);
-        if (err) {
-          console.log(err);
-          res.json({
-            success: false,
-            msg: "" + err,
-            user
-          });
-        }
-        if (response)
-          res.json({
-            success: true,
-            msg: "Usuario Creado Correctamente: "
-          });
-      });
-    console.log(result)
-  } catch (error) {
-    return res.json(error);
-  }
-};*/
-
 exports.registro = async (req, res) => {
   try {
     let user = req.body;
@@ -105,7 +70,7 @@ exports.registro = async (req, res) => {
       :V_DIRECCION,
       :V_TELEFONO,
       :V_ID_ROL); end;`;
-      
+
     const data = {
       V_RUT: user.rut,
       V_NOMBRE: user.nombre,
@@ -117,27 +82,24 @@ exports.registro = async (req, res) => {
       V_ID_ROL: user.idRol,
     };
 
-    result = cone.execute(sql, data,
-      async (err, response) => {
-        await closeBD(cone);
-        if (err) {
-          console.log(err);
-          res.json({
-            success: false,
-            msg: "" + err,
-            errorNum:err.errorNum
-          });
-        }
-        if (response)
-          console.log(response)
-          res.json({
-            success: true,
-            msg: "Usuario Creado Correctamente: ",
-            response
-          });
+    result = cone.execute(sql, data, async (err, response) => {
+      await closeBD(cone);
+      if (err) {
+        console.log(err);
+        res.json({
+          success: false,
+          msg: "" + err,
+          errorNum: err.errorNum,
+        });
+      }
+      if (response) console.log(response);
+      res.json({
+        success: true,
+        msg: "Usuario Creado Correctamente: ",
+        response,
       });
+    });
   } catch (error) {
     return res.json(error);
   }
 };
-
