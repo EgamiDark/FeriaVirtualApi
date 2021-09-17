@@ -140,13 +140,13 @@ exports.getUsuarios = async (req, res) => {
 //OBTENER USUARIO
 exports.getUsuario = async (req, res) => {
   try {
-    let user = req.body
+    let id = req.params.id
     const cone = await openBD();
     sql = `begin PKG_METODOS.OBTENER_ROLES(:cursor,:id); end;`;
 
     const data = {
       cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
-      id:user.id
+      id:id
     };
 
     const result = await cone.execute(sql, data);
