@@ -13,10 +13,8 @@ exports.getRol = async (req, res) => {
 
     const result = await cone.execute(sql, data);
     const resultSet = result.outBinds.cursor;
-    console.log(resultSet);
 
     const rows = await resultSet.getRows();
-    console.log(rows);
 
     if(rows){
       res.json({
@@ -99,6 +97,78 @@ exports.registro = async (req, res) => {
         response,
       });
     });
+  } catch (error) {
+    return res.json(error);
+  }
+};
+
+//OBTENER USUARIOS
+exports.getUsuarios = async (req, res) => {
+  try {
+    const cone = await openBD();
+    sql = `begin PKG_METODOS.OBTENER_USUARIOS(:cursor); end;`;
+
+    const data = {
+      cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
+    };
+
+    const result = await cone.execute(sql, data);
+    const resultSet = result.outBinds.cursor;
+
+    const rows = await resultSet.getRows();
+
+    if(rows){
+      res.json({
+        success: true,
+        msg: "Usuarios obtenidos correctamente",
+        rows,
+      });
+    }else{
+      res.json({
+        success: false,
+        msg: "" + err,
+        errorNum: err.errorNum,
+      });
+    }
+
+    await closeBD(cone);
+  } catch (error) {
+    return res.json(error);
+  }
+};
+
+//OBTENER USUARIO
+exports.getUsuario = async (req, res) => {
+  try {
+    let user = req.body
+    const cone = await openBD();
+    sql = `begin PKG_METODOS.OBTENER_ROLES(:cursor,:id); end;`;
+
+    const data = {
+      cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
+      id:user.id
+    };
+
+    const result = await cone.execute(sql, data);
+    const resultSet = result.outBinds.cursor;
+
+    const rows = await resultSet.getRows();
+
+    if(rows){
+      res.json({
+        success: true,
+        msg: "Usuario obtenido correctamente",
+        rows,
+      });
+    }else{
+      res.json({
+        success: false,
+        msg: "" + err,
+        errorNum: err.errorNum,
+      });
+    }
+
+    await closeBD(cone);
   } catch (error) {
     return res.json(error);
   }
