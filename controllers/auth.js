@@ -39,16 +39,36 @@ exports.getRol = async (req, res) => {
 //LOGIN
 exports.login = async (req, res) => {
   try {
-    let user = req.body;
+    let user = req.body
     const cone = await openBD();
-    result = await cone.execute(
-      `SELECT * FROM USUARIO WHERE EMAIL = '${user.email}' AND CONTRASENIA = '${user.contrasenia}'`,
-      async (err, response) => {
-        await closeBD(cone);
-        if (err) console.log(err);
-        if (response) res.json(response.rows);
-      }
-    );
+    sql = `begin PKG_METODOS.LOGIN(:cursor,:email,:contrasenia); end;`;
+
+    const data = {
+      cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
+      email:user.email,
+      contrasenia:user.contrasenia,
+    };
+
+    const result = await cone.execute(sql, data);
+    const resultSet = result.outBinds.cursor;
+
+    const rows = await resultSet.getRows();
+
+    if(rows){
+      res.json({
+        success: true,
+        msg: "Usuario obtenido correctamente",
+        rows,
+      });
+    }else{
+      res.json({
+        success: false,
+        msg: "" + err,
+        errorNum: err.errorNum,
+      });
+    }
+
+    await closeBD(cone);
   } catch (error) {
     return res.json(error);
   }
@@ -142,7 +162,7 @@ exports.getUsuario = async (req, res) => {
   try {
     let id = req.params.id
     const cone = await openBD();
-    sql = `begin PKG_METODOS.OBTENER_ROLES(:cursor,:id); end;`;
+    sql = `begin PKG_METODOS.OBTENER_USUARIO(:cursor,:id); end;`;
 
     const data = {
       cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
@@ -158,6 +178,43 @@ exports.getUsuario = async (req, res) => {
       res.json({
         success: true,
         msg: "Usuario obtenido correctamente",
+        rows,
+      });
+    }else{
+      res.json({
+        success: false,
+        msg: "" + err,
+        errorNum: err.errorNum,
+      });
+    }
+
+    await closeBD(cone);
+  } catch (error) {
+    return res.json(error);
+  }
+};
+
+//VALIDAR EXISTENCIA DE EMAIL
+exports.getValidarEmail = async (req, res) => {
+  try {
+    let email = req.params.email
+    const cone = await openBD();
+    sql = `begin PKG_METODOS.VALIDAR_EMAIL(:cursor,:email); end;`;
+
+    const data = {
+      cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
+      email:email
+    };
+
+    const result = await cone.execute(sql, data);
+    const resultSet = result.outBinds.cursor;
+
+    const rows = await resultSet.getRows();
+
+    if(rows){
+      res.json({
+        success: true,
+        msg: "Email obtenido correctamente",
         rows,
       });
     }else{
