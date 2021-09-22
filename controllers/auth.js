@@ -70,17 +70,17 @@ exports.registro = async (req, res) => {
       :V_ID_ROL); end;`;
 
     const data = {
-      V_RUT: user.rut,
-      V_NOMBRE: user.nombre,
-      V_APELLIDOS: user.apellidos,
-      V_EMAIL: user.email,
-      V_CONTRASENIA: user.contrasenia,
-      V_DIRECCION: user.direccion,
-      V_TELEFONO: user.telefono,
-      V_ID_ROL: user.idRol,
+      V_RUT: user.Rut,
+      V_NOMBRE: user.Nombre,
+      V_APELLIDOS: user.Apellidos,
+      V_EMAIL: user.Email,
+      V_CONTRASENIA: user.Contrasenia,
+      V_DIRECCION: user.Direccion,
+      V_TELEFONO: user.Telefono,
+      V_ID_ROL: parseInt(user.IdRol),
     };
 
-    result = cone.execute(sql, data, async (err, response) => {
+    const result = cone.execute(sql, data, async (err, response) => {
       await closeBD(cone);
       if (err) {
         console.log(err);
@@ -91,12 +91,14 @@ exports.registro = async (req, res) => {
         });
       }
       if (response) console.log(response);
-      res.json({
+      res.status(200).json({
         success: true,
         msg: "Usuario Creado Correctamente: ",
         response,
       });
     });
+
+    console.log(result);
   } catch (error) {
     return res.json(error);
   }
