@@ -74,6 +74,7 @@ exports.login = async (req, res) => {
   }
 };
 
+//REGISTRO
 exports.registro = async (req, res) => {
   try {
     let user = req.body;
@@ -114,6 +115,61 @@ exports.registro = async (req, res) => {
       res.status(200).json({
         success: true,
         msg: "Usuario Creado Correctamente: ",
+        response,
+      });
+    });
+
+    console.log(result);
+  } catch (error) {
+    return res.json(error);
+  }
+};
+
+//MODIFICAR USUARIO
+exports.modificarUsuario = async (req, res) => {
+  try {
+    let user = req.body;
+    const cone = await openBD();
+
+    sql = `begin PKG_METODOS.INSERTAR_USUARIO(
+      :V_ID_USUARIO,
+      :V_ACTIVIDAD
+      :V_RUT,
+      :V_NOMBRE,
+      :V_APELLIDOS ,
+      :V_EMAIL,
+      :V_CONTRASENIA,
+      :V_DIRECCION,
+      :V_TELEFONO,
+      :V_ID_ROL); end;`;
+
+    const data = {
+      V_ID_USUARIO: parseInt(user.IdUsuario),
+      V_ACTIVIDAD: parseInt(user.Actividad),
+      V_RUT: user.Rut,
+      V_NOMBRE: user.Nombre,
+      V_APELLIDOS: user.Apellidos,
+      V_EMAIL: user.Email,
+      V_CONTRASENIA: user.Contrasenia,
+      V_DIRECCION: user.Direccion,
+      V_TELEFONO: user.Telefono,
+      V_ID_ROL: parseInt(user.IdRol),
+    };
+
+    const result = cone.execute(sql, data, async (err, response) => {
+      await closeBD(cone);
+      if (err) {
+        console.log(err);
+        res.json({
+          success: false,
+          msg: "" + err,
+          errorNum: err.errorNum,
+        });
+      }
+      if (response) console.log(response);
+      res.status(200).json({
+        success: true,
+        msg: "Usuario Modificado Correctamente: ",
         response,
       });
     });
