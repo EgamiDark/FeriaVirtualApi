@@ -21,5 +21,5 @@ const port = process.env.PORT;
 //listen.port
 
 app.listen(port, () => {
-    console.log(`Aplicacion de MySQL corriendo en el puerto ${port}`);
+    console.log(`Aplicacion de Oracle corriendo en el puerto ${port}`);
 })
