@@ -129,12 +129,20 @@ exports.registro = async (req, res) => {
 exports.modificarUsuario = async (req, res) => {
   try {
     let user = req.body;
+    var activo;
+
+    if(user.Actividad){
+      activo = 1;
+    }else{
+      activo = 0;
+    }
+
     const cone = await openBD();
 
-    sql = `begin PKG_METODOS.INSERTAR_USUARIO(
+    sql = `begin PKG_METODOS.MODIFICAR_USUARIO(
       :V_ID_USUARIO,
-      :V_ACTIVIDAD
-      :V_RUT,
+      :V_ACTIVIDAD,
+      :V_RUT, 
       :V_NOMBRE,
       :V_APELLIDOS ,
       :V_EMAIL,
@@ -145,7 +153,7 @@ exports.modificarUsuario = async (req, res) => {
 
     const data = {
       V_ID_USUARIO: parseInt(user.IdUsuario),
-      V_ACTIVIDAD: parseInt(user.Actividad),
+      V_ACTIVIDAD: activo,
       V_RUT: user.Rut,
       V_NOMBRE: user.Nombre,
       V_APELLIDOS: user.Apellidos,
@@ -159,22 +167,20 @@ exports.modificarUsuario = async (req, res) => {
     const result = cone.execute(sql, data, async (err, response) => {
       await closeBD(cone);
       if (err) {
-        console.log(err);
+        console.log("Error: " + err);
         res.json({
           success: false,
           msg: "" + err,
           errorNum: err.errorNum,
         });
       }
-      if (response) console.log(response);
+      if (response) console.log("Response: " + response);
       res.status(200).json({
         success: true,
         msg: "Usuario Modificado Correctamente: ",
         response,
       });
     });
-
-    console.log(result);
   } catch (error) {
     return res.json(error);
   }
