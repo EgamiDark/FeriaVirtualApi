@@ -146,6 +146,7 @@ ALTER TABLE rol ADD CONSTRAINT rol_pk PRIMARY KEY ( idrol );
 CREATE TABLE subastatrans (
     idsubastatrans INTEGER NOT NULL,
     fechasubasta   DATE NOT NULL,
+    fechatermino   DATE NOT NULL,
     idpedido       INTEGER,
     idventalocal   INTEGER,
     idtiporefrig   INTEGER NOT NULL,
