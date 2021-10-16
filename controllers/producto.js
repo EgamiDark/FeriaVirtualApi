@@ -17,11 +17,11 @@ exports.getProductos = async (req, res) => {
     const resultSet = result.outBinds.cursor;
 
     const rows = await resultSet.getRows();
-
-    console.log(rows[0][3])
-    let img='';
+    let img=[];
+    for(let i=0;i<rows.length;i++){
+      img.push(rows[i][3].toString());
+    }
     if (rows) {
-      img = rows[0][3].toString();
       res.json({
         success: true,
         msg: "Productos obtenidos correctamente",
@@ -35,7 +35,6 @@ exports.getProductos = async (req, res) => {
         errorNum: err.errorNum,
       });
     }
-
     await closeBD(cone);
   } catch (error) {
     console.log(error)
@@ -80,7 +79,6 @@ exports.postProducto = async (req, res) => {
         });
       }
       if (response){
-        console.log(response)
         res.json({
           success: true,
           msg: "Producto Creado Correctamente: ",
