@@ -3,31 +3,23 @@
   "version": "1.0.0",
   "description": "Api de aplicacion FeriaVirtualApp",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/EgamiDark/FeriaVirtualApi.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/EgamiDark/FeriaVirtualApi/issues"
-  },
-  "homepage": "https://github.com/EgamiDark/FeriaVirtualApi#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
-    "buffer": "^6.0.3",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "morgan": "^1.10.0",
-    "node-blob": "0.0.2",
     "nodemon": "^2.0.12",
     "oracledb": "^5.2.0",
     "util.promisify": "^1.1.1"
-  }
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "",
+  "license": "ISC"
 }

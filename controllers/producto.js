@@ -1,6 +1,7 @@
-const Blob = require('node-blob');
 const oracledb = require("oracledb");
 const { openBD, closeBD } = require("../connection");
+oracledb.fetchAsBuffer = [oracledb.BLOB]
+oracledb.fetchAsString = [oracledb.CLOB]
 
 // OBTENER TODOS LOS PRODUCTOS
 exports.getProductos = async (req, res) => {
@@ -17,17 +18,15 @@ exports.getProductos = async (req, res) => {
 
     const rows = await resultSet.getRows();
 
-    for (let i = 0; i < rows.length; i++) {
-      const element = rows[i][3];
-      console.log(element.toString('base64').toString());
-      rows[i][3] = element.toString('base64');
-    }
-
+    console.log(rows[0][3])
+    let img='';
     if (rows) {
+      img = rows[0][3].toString();
       res.json({
         success: true,
         msg: "Productos obtenidos correctamente",
         rows,
+        img:img,
       });
     } else {
       res.json({
@@ -59,39 +58,39 @@ exports.postProducto = async (req, res) => {
 
     sql = `begin PKG_METODOS.INSERTAR_PRODUCTO(
       :V_NOMBRE,
-      :V_IMAGEN,
-      :V_ISACTIVE); end;`
+      :V_ISACTIVE,
+      :V_IMAGEN
+      ); end;`
     ;
-
-    let imagen = Buffer.from(producto.Imagen)
-
+    const imagen = Buffer.from(producto.Imagen)
     const data = {
       V_NOMBRE: producto.Nombre,
       V_IMAGEN: imagen,
       V_ISACTIVE: producto.IsActive,
     };
 
-    const result = cone.execute(sql, data, async (err, response) => {
+    const result = cone.execute(sql, data,async (err, response) => {
       await closeBD(cone);
       if (err) {
-        console.log(err);
+        console.log(err)
         res.json({
           success: false,
           msg: "" + err,
           errorNum: err.errorNum,
         });
       }
-      if (response) console.log(response);
-      res.status(200).json({
-        success: true,
-        msg: "Producto Creado Correctamente: ",
-        response,
-      });
+      if (response){
+        console.log(response)
+        res.json({
+          success: true,
+          msg: "Producto Creado Correctamente: ",
+          response,
+        });
+      }
     });
-
-    console.log(result);
+    
   } catch (error) {
-    console.log(error);
+    console.log(error)
     return res.json(error);
   }
 };
