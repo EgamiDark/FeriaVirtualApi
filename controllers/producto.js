@@ -109,14 +109,17 @@ exports.modificarProducto = async (req, res) => {
     sql = `begin PKG_METODOS.MODIFICAR_PRODUCTO(
       :V_ID_PRODUCTO,
       :V_NOMBRE,
-      :V_STOCK,
-      :V_ISACTIVE); end;`;
+      :V_ISACTIVE,
+      :V_IMAGEN); end;`
+    ;
+
+    const imagen = Buffer.from(producto.Imagen)
 
     const data = {
       V_ID_PRODUCTO: producto.IdProducto,
       V_NOMBRE: producto.Nombre,
-      V_STOCK: producto.Stock,
       V_ISACTIVE: producto.IsActive,
+      V_IMAGEN: imagen
     };
 
     const result = cone.execute(sql, data, async (err, response) => {
@@ -135,7 +138,10 @@ exports.modificarProducto = async (req, res) => {
         response,
       });
     });
+
+    console.log(result);
   } catch (error) {
+    console.log(error)
     return res.json(error);
   }
 };
