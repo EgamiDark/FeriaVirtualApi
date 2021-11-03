@@ -15,6 +15,7 @@ require('dotenv').config();
 //routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/producto', require('./routes/producto'));
+app.use('/api/transporte', require('./routes/transporte'));
 
 //port
 const port = process.env.PORT;
