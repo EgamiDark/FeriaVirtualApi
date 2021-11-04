@@ -7,13 +7,15 @@ const {
     modificarTransporte, 
     postTransporte, 
     actividadTransporte,
-    getTransporte
+    getTransporte,
+    getTransportesUsuario
 } = require("../controllers/transporte");
 
 // Rutas
 router.post('/insertar', postTransporte);
 router.get('/obtener/todos', getTransportes);
 router.get('/obtener/transporte', getTransporte);
+router.get('/obtener/todos/usuario/:idUsuario', getTransportesUsuario);
 router.post('/modificar', modificarTransporte);
 router.post('/modificar/actividad', actividadTransporte);
 

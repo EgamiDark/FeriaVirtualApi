@@ -36,6 +36,45 @@ exports.getTransportes = async (req, res) => {
   }
 };
 
+// OBTIENE TODOS LOS TRANSPORTES DE UN USUARIO EN ESPECIFICO
+exports.getTransportesUsuario = async (req, res) => {
+  try {
+    const cone = await openBD();
+    sql = `begin PKG_METODOS.OBTENER_TRANSPORTES_USUARIO(
+      :cursor,
+      :V_ID_USUARIO); end;`;
+      console.log(req)
+
+    const data = {
+      cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
+      V_ID_USUARIO: req.params.idUsuario
+    };
+
+    const result = await cone.execute(sql, data);
+    const resultSet = result.outBinds.cursor;
+
+    const rows = await resultSet.getRows();
+
+    if (rows) {
+      res.json({
+        success: true,
+        msg: "Transportes del usuario obtenidos correctamente",
+        rows,
+      });
+    } else {
+      res.json({
+        success: false,
+        msg: "" + err,
+        errorNum: err.errorNum,
+      });
+    }
+
+    await closeBD(cone);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // OBTIENE UN TRANSPORTE
 exports.getTransporte = async (req, res) => {
   try {
@@ -81,6 +120,7 @@ exports.getTransporte = async (req, res) => {
 exports.postTransporte = async (req, res) => {
   try {
     let transporte = req.body;
+    console.log(transporte)
 
     const cone = await openBD();
 
@@ -95,13 +135,13 @@ exports.postTransporte = async (req, res) => {
         ); end;`;
 
     const data = {
-      V_PATENTE: transporte.Patente,
-      V_TAMANIO: transporte.Tamanio,
-      V_CAPACIDAD: transporte.CapacidadCarga,
-      V_ACTIVIDAD: transporte.Actividad,
-      V_ID_TIPO_REFRIG: transporte.IdTipoRefrig,
-      V_ID_TIPO_TRANS: transporte.IdTipoTrans,
-      V_ID_USUARIO: transporte.IdUsuario,
+      V_PATENTE: transporte.patente,
+      V_TAMANIO: transporte.tamanio,
+      V_CAPACIDAD: transporte.capacidadCarga,
+      V_ACTIVIDAD: transporte.actividad,
+      V_ID_TIPO_REFRIG: transporte.idTipoRefrig,
+      V_ID_TIPO_TRANS: transporte.idTipoTrans,
+      V_ID_USUARIO: transporte.idUsuario,
     };
 
     const result = cone.execute(sql, data, async (err, response) => {
