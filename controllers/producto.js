@@ -49,10 +49,10 @@ exports.postProducto = async (req, res) => {
 
     const cone = await openBD();
 
-    if (producto.IsActive) {
-      producto.IsActive = "1";
+    if (producto.isActive) {
+      producto.isActive = "1";
     } else {
-      producto.IsActive = "0";
+      producto.isActive = "0";
     }
 
     sql = `begin PKG_METODOS.INSERTAR_PRODUCTO(
@@ -61,11 +61,11 @@ exports.postProducto = async (req, res) => {
       :V_IMAGEN
       ); end;`
     ;
-    const imagen = Buffer.from(producto.Imagen)
+    const imagen = Buffer.from(producto.imagen)
     const data = {
-      V_NOMBRE: producto.Nombre,
+      V_NOMBRE: producto.nombre,
       V_IMAGEN: imagen,
-      V_ISACTIVE: producto.IsActive,
+      V_ISACTIVE: producto.isActive,
     };
 
     const result = cone.execute(sql, data,async (err, response) => {
@@ -98,10 +98,10 @@ exports.modificarProducto = async (req, res) => {
   try {
     let producto = req.body;
 
-    if (producto.IsActive) {
-      producto.IsActive = "1";
+    if (producto.isActive) {
+      producto.isActive = "1";
     } else {
-      producto.IsActive = "0";
+      producto.isActive = "0";
     }
 
     const cone = await openBD();
@@ -113,12 +113,12 @@ exports.modificarProducto = async (req, res) => {
       :V_IMAGEN); end;`
     ;
 
-    const imagen = Buffer.from(producto.Imagen)
+    const imagen = Buffer.from(producto.imagen)
 
     const data = {
-      V_ID_PRODUCTO: producto.IdProducto,
-      V_NOMBRE: producto.Nombre,
-      V_ISACTIVE: producto.IsActive,
+      V_ID_PRODUCTO: producto.idProducto,
+      V_NOMBRE: producto.nombre,
+      V_ISACTIVE: producto.isActive,
       V_IMAGEN: imagen
     };
 

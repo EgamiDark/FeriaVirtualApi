@@ -5,6 +5,7 @@ const router = express.Router();
 const {
   getPedidoById,
   getPedidos,
+  getPedidosD,
   getPedidosUsuario,
   modificarPedido,
   postPedido
@@ -13,6 +14,7 @@ const {
 // Rutas
 router.post('/insertar', postPedido);
 router.get('/obtener/todos', getPedidos);
+router.get('/obtener/disponibles', getPedidosD);
 router.get('/obtener/pedido/:idPedido', getPedidoById);
 router.get('/obtener/todos/usuario/:idUsuario', getPedidosUsuario);
 router.post('/modificar', modificarPedido);

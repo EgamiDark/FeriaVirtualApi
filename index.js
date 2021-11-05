@@ -19,6 +19,8 @@ app.use('/api/transporte', require('./routes/transporte'));
 app.use('/api/pedido', require('./routes/pedido'));
 app.use('/api/pagos', require('./routes/pagos'));
 app.use('/api/contrato', require('./routes/contrato'));
+app.use('/api/subasta', require('./routes/subasta'));
+app.use('/api/datosFk', require('./routes/datosFk'));
 
 //port
 const port = process.env.PORT;

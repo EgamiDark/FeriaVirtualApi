@@ -39,6 +39,7 @@ exports.getTransportes = async (req, res) => {
 // OBTIENE TODOS LOS TRANSPORTES DE UN USUARIO EN ESPECIFICO
 exports.getTransportesUsuario = async (req, res) => {
   try {
+    const id = req.params.idUsuario;
     const cone = await openBD();
     sql = `begin PKG_METODOS.OBTENER_TRANSPORTES_USUARIO(
       :cursor,
@@ -46,7 +47,7 @@ exports.getTransportesUsuario = async (req, res) => {
 
     const data = {
       cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
-      V_ID_USUARIO: req.params.idUsuario
+      V_ID_USUARIO:id
     };
 
     const result = await cone.execute(sql, data);
@@ -87,7 +88,7 @@ exports.getTransporte = async (req, res) => {
 
     const data = {
       cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
-      V_PATENTE: transporte.Patente
+      V_PATENTE: transporte.patente
     };
 
     const result = await cone.execute(sql, data);
@@ -119,7 +120,6 @@ exports.getTransporte = async (req, res) => {
 exports.postTransporte = async (req, res) => {
   try {
     let transporte = req.body;
-    console.log(transporte)
 
     const cone = await openBD();
 
@@ -185,13 +185,13 @@ exports.modificarTransporte = async (req, res) => {
         ); end;`;
 
     const data = {
-      V_PATENTE: transporte.Patente,
-      V_TAMANIO: transporte.Tamanio,
-      V_CAPACIDAD: transporte.CapacidadCarga,
-      V_ACTIVIDAD: transporte.Actividad,
-      V_ID_TIPO_REFRIG: transporte.IdTipoRefrig,
-      V_ID_TIPO_TRANS: transporte.IdTipoTrans,
-      V_ID_USUARIO: transporte.IdUsuario,
+      V_PATENTE: transporte.patente,
+      V_TAMANIO: transporte.tamanio,
+      V_CAPACIDAD: transporte.capacidadCarga,
+      V_ACTIVIDAD: transporte.actividad,
+      V_ID_TIPO_REFRIG: transporte.idTipoRefrig,
+      V_ID_TIPO_TRANS: transporte.idTipoTrans,
+      V_ID_USUARIO: transporte.idUsuario,
     };
 
     const result = cone.execute(sql, data, async (err, response) => {
@@ -230,8 +230,8 @@ exports.actividadTransporte = async (req, res) => {
         ); end;`;
 
     const data = {
-      V_PATENTE: transporte.Patente,
-      V_ACTIVIDAD: transporte.Actividad
+      V_PATENTE: transporte.patente,
+      V_ACTIVIDAD: transporte.actividad
     };
 
     const result = cone.execute(sql, data, async (err, response) => {
@@ -248,7 +248,7 @@ exports.actividadTransporte = async (req, res) => {
           success: true,
           msg:
             "Actividad del transporte con patente " +
-            transporte.Patente +
+            transporte.patente +
             " modificado correctamente!",
           response,
         });

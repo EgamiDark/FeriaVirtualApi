@@ -91,14 +91,14 @@ exports.registro = async (req, res) => {
       :V_ID_ROL); end;`;
 
     const data = {
-      V_RUT: user.Rut,
-      V_NOMBRE: user.Nombre,
-      V_APELLIDOS: user.Apellidos,
-      V_EMAIL: user.Email,
-      V_CONTRASENIA: user.Contrasenia,
-      V_DIRECCION: user.Direccion,
-      V_TELEFONO: user.Telefono,
-      V_ID_ROL: parseInt(user.IdRol),
+      V_RUT: user.rut,
+      V_NOMBRE: user.nombre,
+      V_APELLIDOS: user.apellidos,
+      V_EMAIL: user.email,
+      V_CONTRASENIA: user.contrasenia,
+      V_DIRECCION: user.direccion,
+      V_TELEFONO: user.telefono,
+      V_ID_ROL: parseInt(user.idRol),
     };
 
     const result = cone.execute(sql, data, async (err, response) => {
@@ -131,7 +131,7 @@ exports.modificarUsuario = async (req, res) => {
     let user = req.body;
     var activo;
 
-    if(user.Actividad){
+    if(user.actividad){
       activo = 1;
     }else{
       activo = 0;
@@ -154,14 +154,14 @@ exports.modificarUsuario = async (req, res) => {
     const data = {
       V_ID_USUARIO: parseInt(user.IdUsuario),
       V_ACTIVIDAD: activo,
-      V_RUT: user.Rut,
-      V_NOMBRE: user.Nombre,
-      V_APELLIDOS: user.Apellidos,
-      V_EMAIL: user.Email,
-      V_CONTRASENIA: user.Contrasenia,
-      V_DIRECCION: user.Direccion,
-      V_TELEFONO: user.Telefono,
-      V_ID_ROL: parseInt(user.IdRol),
+      V_RUT: user.rut,
+      V_NOMBRE: user.nombre,
+      V_APELLIDOS: user.apellidos,
+      V_EMAIL: user.email,
+      V_CONTRASENIA: user.contrasenia,
+      V_DIRECCION: user.direccion,
+      V_TELEFONO: user.telefono,
+      V_ID_ROL: parseInt(user.idRol),
     };
 
     const result = cone.execute(sql, data, async (err, response) => {
