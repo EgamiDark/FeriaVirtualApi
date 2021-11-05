@@ -43,7 +43,6 @@ exports.getTransportesUsuario = async (req, res) => {
     sql = `begin PKG_METODOS.OBTENER_TRANSPORTES_USUARIO(
       :cursor,
       :V_ID_USUARIO); end;`;
-      console.log(req)
 
     const data = {
       cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
@@ -201,19 +200,17 @@ exports.modificarTransporte = async (req, res) => {
         res.json({
           success: false,
           msg: "" + err,
-          errorNum: err.errorNum,
+          errorNum: err.errorNum
         });
       }
       if (response) {
         res.status(200).json({
           success: true,
           msg: "Transporte modificado correctamente",
-          response,
+          response
         });
       }
     });
-
-    console.log(result);
   } catch (error) {
     console.log(error);
     return res.json(error);
@@ -224,7 +221,6 @@ exports.modificarTransporte = async (req, res) => {
 exports.actividadTransporte = async (req, res) => {
   try {
     let transporte = req.body;
-    console.log(transporte)
 
     const cone = await openBD();
 
@@ -235,7 +231,7 @@ exports.actividadTransporte = async (req, res) => {
 
     const data = {
       V_PATENTE: transporte.Patente,
-      V_ACTIVIDAD: transporte.Actividad,
+      V_ACTIVIDAD: transporte.Actividad
     };
 
     const result = cone.execute(sql, data, async (err, response) => {
