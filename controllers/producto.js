@@ -19,7 +19,9 @@ exports.getProductos = async (req, res) => {
     const rows = await resultSet.getRows();
     let img=[];
     for(let i=0;i<rows.length;i++){
-      img.push(rows[i][3].toString());
+      if(rows[i][3]){
+        img.push(rows[i][3].toString());
+      }
     }
     if (rows) {
       res.json({
