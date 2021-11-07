@@ -4,6 +4,8 @@ const { openBD, closeBD } = require("../connection");
 // OBTIENE LOS CONTRATOS POR USUARIO
 exports.getContratos = async (req, res) => {
   try {
+    let idUsuario = req.params.idUsuario;
+    
     const cone = await openBD();
     sql = `begin PKG_METODOS.OBTENER_CONTRATOS_USUARIO(
           :cursor,
@@ -11,7 +13,7 @@ exports.getContratos = async (req, res) => {
 
     const data = {
       cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
-      V_ID_USUARIO: req.params.idUsuario,
+      V_ID_USUARIO: idUsuario,
     };
 
     const result = await cone.execute(sql, data);
