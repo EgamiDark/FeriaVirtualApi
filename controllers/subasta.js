@@ -77,6 +77,7 @@ exports.ingresarOferta = async (req, res) => {
       let oferta = req.body;
       const cone = await openBD();
   
+      console.log(oferta)
       sql = `begin PKG_METODOS.INSERTAR_OFERTA_S(
         :V_PRECIO_OFERTA,
         :V_CANTIDAD_TRANSPORTE,
@@ -84,11 +85,11 @@ exports.ingresarOferta = async (req, res) => {
         :V_ID_SUBASTA,
         :V_PATENTE); end;`;
       const data = {
-        V_PRECIO_OFERTA: oferta.PrecioOferta,
-        V_CANTIDAD_TRANSPORTE: oferta.CantidadTransporte,
-        V_FECHA_ENTREGA: oferta.FechaEntrega,
-        V_ID_SUBASTA: oferta.IdSubasta,
-        V_PATENTE: oferta.Patente,
+        V_PRECIO_OFERTA: oferta.precioOferta,
+        V_CANTIDAD_TRANSPORTE: oferta.cantidadTransporte,
+        V_FECHA_ENTREGA: oferta.fechaEntrega,
+        V_ID_SUBASTA: oferta.idSubasta,
+        V_PATENTE: oferta.patente,
       };
   
       const result = cone.execute(sql, data, async (err, response) => {
@@ -128,11 +129,11 @@ exports.modificarOferta = async (req, res) => {
         :V_PATENTE,
         :V_ID_OFERTA); end;`;
       const data = {
-        V_PRECIO_OFERTA: oferta.PrecioOferta,
-        V_CANTIDAD_TRANSPORTE: oferta.CantidadTransporte,
-        V_FECHA_ENTREGA: oferta.FechaEntrega,
-        V_PATENTE: oferta.Patente,
-        V_ID_OFERTA: oferta.IdOferta
+        V_PRECIO_OFERTA: oferta.precioOferta,
+        V_CANTIDAD_TRANSPORTE: oferta.cantidadTransporte,
+        V_FECHA_ENTREGA: oferta.fechaEntrega,
+        V_PATENTE: oferta.patente,
+        V_ID_OFERTA: oferta.idOferta
       };
   
       const result = cone.execute(sql, data, async (err, response) => {
