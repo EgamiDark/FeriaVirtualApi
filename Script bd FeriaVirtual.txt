@@ -154,7 +154,7 @@ CREATE TABLE subastatrans (
     idsubastatrans  INTEGER NOT NULL,
     fechasubasta    DATE NOT NULL,
     fechatermino    DATE NOT NULL,
-    pedido_idpedido INTEGER,
+    idpedido INTEGER,
     idventalocal    INTEGER,
     idtiporefrig    INTEGER NOT NULL,
     idtipotrans     INTEGER NOT NULL,
@@ -283,7 +283,7 @@ ALTER TABLE subastatrans
         REFERENCES estsubasta ( idestsubasta );
 
 ALTER TABLE subastatrans
-    ADD CONSTRAINT subastatrans_pedido_fk FOREIGN KEY ( pedido_idpedido )
+    ADD CONSTRAINT subastatrans_pedido_fk FOREIGN KEY ( idpedido )
         REFERENCES pedido ( idpedido );
 
 ALTER TABLE subastatrans
@@ -374,12 +374,16 @@ INSERT INTO ESTOFERTRANS VALUES(4,'RECHAZADA');
 INSERT INTO ESTSUBASTA VALUES(1,'EN PROCESO');
 INSERT INTO ESTSUBASTA VALUES(2,'TERMINADA');
 INSERT INTO ESTSUBASTA VALUES(3,'CANCELADA');
+
+INSERT INTO TIPOVENTA VALUES(1,'EXTERNA');
+INSERT INTO TIPOVENTA VALUES(2,'LOCAL');
+
 --DATOS DE PRUEBA INICIO
 INSERT INTO ESTPEDIDO VALUES(1,'EN PROCESO');
 
 INSERT INTO PRODUCTO (idproducto, nombre,isactive)VALUES(1,'PALTA',1);
 INSERT INTO PEDIDO VALUES(1,'25-10-2021','25-10-2021',2000,10,20000,1,1,1);
-INSERT INTO SUBASTATRANS(idsubastatrans,fechasubasta,fechatermino,idpedido,idtiporefrig,idtipotrans,idestsubasta) VALUES(1,'28-10-2021','30-10-2021',1,1,1,1)
+INSERT INTO SUBASTATRANS(idsubastatrans,fechasubasta,fechatermino,idpedido,idtiporefrig,idtipotrans,idestsubasta,idtipoventa) VALUES(1,'28-10-2021','30-10-2021',1,1,1,1,1)
 
 --DATOS DE PRUEBA FIN
 /
