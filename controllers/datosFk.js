@@ -140,3 +140,38 @@ exports.getEstadoSubasta = async (req, res) => {
     return res.json(error);
   }
 };
+
+//CONSULTAR ESTADO OFERTA
+exports.getEstadoOferta = async (req, res) => {
+  try {
+    const cone = await openBD();
+    sql = `begin PKG_METODOS.OBTENER_EST_OFERTA(:cursor); end;`;
+
+    const data = {
+      cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
+    };
+
+    const result = await cone.execute(sql, data);
+    const resultSet = result.outBinds.cursor;
+
+    const rows = await resultSet.getRows();
+
+    if(rows){
+      res.json({
+        success: true,
+        msg: "Estado oferta obtenido correctamente",
+        rows,
+      });
+    }else{
+      res.json({
+        success: false,
+        msg: "" + err,
+        errorNum: err.errorNum,
+      });
+    }
+
+    await closeBD(cone);
+  } catch (error) {
+    return res.json(error);
+  }
+};
