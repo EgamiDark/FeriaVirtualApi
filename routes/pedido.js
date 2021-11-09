@@ -8,10 +8,14 @@ const {
   getPedidosD,
   getPedidosUsuario,
   modificarPedido,
-  postPedido
+  postPedido,
+  getOfertas,
+  getOferta
 } = require("../controllers/pedido");
 
 // Rutas
+router.get('/ofertas/:id', getOfertas);
+router.get('/oferta/:id', getOferta);
 router.post('/insertar', postPedido);
 router.get('/obtener/todos', getPedidos);
 router.get('/obtener/disponibles', getPedidosD);

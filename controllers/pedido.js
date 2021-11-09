@@ -254,3 +254,77 @@ exports.modificarPedido = async (req, res) => {
     return res.json(error);
   }
 };
+
+//CONSULTAR OFERTAS REALIZADAS POR EL USUARIO
+exports.getOfertas = async (req, res) => {
+  try {
+    let id = req.params.id
+    const cone = await openBD();
+    sql = `begin PKG_METODOS.OBTENER_OFERTAS_P(:cursor,:v_id); end;`;
+
+    const data = {
+      cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
+      v_id:id
+    };
+
+    const result = await cone.execute(sql, data);
+    const resultSet = result.outBinds.cursor;
+
+    const rows = await resultSet.getRows();
+
+    if(rows){
+      res.json({
+        success: true,
+        msg: "Ofertas obtenidas correctamente",
+        rows,
+      });
+    }else{
+      res.json({
+        success: false,
+        msg: "" + err,
+        errorNum: err.errorNum,
+      });
+    }
+
+    await closeBD(cone);
+  } catch (error) {
+    return res.json(error);
+  }
+};
+
+//CONSULTAR OFERTA POR ID
+exports.getOferta = async (req, res) => {
+try {
+  let id = req.params.id
+  const cone = await openBD();
+  sql = `begin PKG_METODOS.OBTENER_OFERTA_P(:cursor,:v_id); end;`;
+
+  const data = {
+    cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
+    v_id:id
+  };
+
+  const result = await cone.execute(sql, data);
+  const resultSet = result.outBinds.cursor;
+
+  const rows = await resultSet.getRows();
+
+  if(rows){
+    res.json({
+      success: true,
+      msg: "Oferta obtenida correctamente",
+      rows,
+    });
+  }else{
+    res.json({
+      success: false,
+      msg: "" + err,
+      errorNum: err.errorNum,
+    });
+  }
+
+  await closeBD(cone);
+} catch (error) {
+  return res.json(error);
+}
+};

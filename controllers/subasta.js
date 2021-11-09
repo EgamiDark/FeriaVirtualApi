@@ -232,3 +232,40 @@ exports.getOfertas = async (req, res) => {
       return res.json(error);
     }
   };
+
+  //CONSULTAR OFERTA POR ID
+exports.getOferta = async (req, res) => {
+  try {
+    let id = req.params.id
+    const cone = await openBD();
+    sql = `begin PKG_METODOS.OBTENER_OFERTA_S(:cursor,:v_id); end;`;
+
+    const data = {
+      cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
+      v_id:id
+    };
+
+    const result = await cone.execute(sql, data);
+    const resultSet = result.outBinds.cursor;
+
+    const rows = await resultSet.getRows();
+
+    if(rows){
+      res.json({
+        success: true,
+        msg: "Oferta obtenida correctamente",
+        rows,
+      });
+    }else{
+      res.json({
+        success: false,
+        msg: "" + err,
+        errorNum: err.errorNum,
+      });
+    }
+
+    await closeBD(cone);
+  } catch (error) {
+    return res.json(error);
+  }
+};

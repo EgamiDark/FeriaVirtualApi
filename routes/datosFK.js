@@ -6,7 +6,8 @@ const {
   getTipoTransporte,
   getEstadoPedido,
   getEstadoSubasta,
-  getEstadoOferta,
+  getEstadoOfertaSub,
+  getEstadoOfertaProd,
   getEstadoPago
 } = require("../controllers/datosFk");
 
@@ -14,7 +15,8 @@ router.get("/tRefrigeracion", getTipoRefrigeracion);
 router.get("/tTransporte", getTipoTransporte);
 router.get("/estPedido", getEstadoPedido);
 router.get("/estSubasta", getEstadoSubasta);
-router.get("/estOferta", getEstadoOferta);
+router.get("/estOfertaSub", getEstadoOfertaSub);
+router.get("/estOfertaProd", getEstadoOfertaProd);
 router.get("/estPago", getEstadoPago);
 
 module.exports = router;
