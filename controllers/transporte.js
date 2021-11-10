@@ -78,7 +78,7 @@ exports.getTransportesUsuario = async (req, res) => {
 // OBTIENE UN TRANSPORTE
 exports.getTransporte = async (req, res) => {
   try {
-    let transporte = req.body;
+    let patente = req.params.patente;
 
     const cone = await openBD();
     sql = `begin PKG_METODOS.OBTENER_TRANSPORTE(
@@ -88,7 +88,7 @@ exports.getTransporte = async (req, res) => {
 
     const data = {
       cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
-      V_PATENTE: transporte.patente
+      V_PATENTE: patente
     };
 
     const result = await cone.execute(sql, data);
@@ -97,11 +97,18 @@ exports.getTransporte = async (req, res) => {
     const rows = await resultSet.getRows();
 
     if (rows) {
-      res.json({
-        success: true,
-        msg: "Transporte obtenido correctamente",
-        rows,
-      });
+      if(rows.length > 0 ){
+        res.json({
+          success: true,
+          msg: "Transporte obtenido correctamente",
+          rows,
+        });
+      }else {
+        res.json({
+          success: false,
+          msg: "No hay transportes",
+        });
+      }
     } else {
       res.json({
         success: false,
@@ -170,7 +177,8 @@ exports.postTransporte = async (req, res) => {
 // MODIFICAR TRANSPORTE
 exports.modificarTransporte = async (req, res) => {
   try {
-    let transporte = req.body;
+    const transporte = req.body;
+    console.log(transporte)
 
     const cone = await openBD();
 
