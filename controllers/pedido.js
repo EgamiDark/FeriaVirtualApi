@@ -71,6 +71,41 @@ exports.getPedidosD = async (req, res) => {
   }
 };
 
+// OBTIENE TODOS LOS PEDIDOS TERMINADOS O CON SUBASTAS CANCELADAS
+exports.getPedidosT = async (req, res) => {
+  try {
+    const cone = await openBD();
+    sql = `begin PKG_METODOS.OBTENER_PEDIDOS_T(:cursor); end;`;
+
+    const data = {
+      cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
+    };
+
+    const result = await cone.execute(sql, data);
+    const resultSet = result.outBinds.cursor;
+
+    const rows = await resultSet.getRows();
+
+    if (rows) {
+      res.json({
+        success: true,
+        msg: "Pedidos terminados obtenidos correctamente",
+        rows,
+      });
+    } else {
+      res.json({
+        success: false,
+        msg: "" + err,
+        errorNum: err.errorNum,
+      });
+    }
+
+    await closeBD(cone);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // OBTIENE TODOS LOS PEDIDOS DE UN USUARIO EN ESPECIFICO
 exports.getPedidosUsuario = async (req, res) => {
   try {

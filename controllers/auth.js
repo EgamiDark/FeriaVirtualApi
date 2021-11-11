@@ -152,7 +152,7 @@ exports.modificarUsuario = async (req, res) => {
       :V_ID_ROL); end;`;
 
     const data = {
-      V_ID_USUARIO: parseInt(user.IdUsuario),
+      V_ID_USUARIO: parseInt(user.idUsuario),
       V_ACTIVIDAD: activo,
       V_RUT: user.rut,
       V_NOMBRE: user.nombre,
