@@ -328,3 +328,134 @@ try {
   return res.json(error);
 }
 };
+
+//INGRESAR OFERTA DE PRODUCTO
+exports.ingresarOferta = async (req, res) => {
+  try {
+    let oferta = req.body;
+    const cone = await openBD();
+
+    console.log(oferta)
+    sql = `begin PKG_METODOS.INSERTAR_OFERTA_P(
+      :V_PRECIO_UNIDAD,
+      :V_KG_UNIDAD,
+      :V_CANTIDAD,
+      :V_FECHA_COSECHA,
+      :V_FECHA_CADUCIDAD,
+      :V_ID_PEDIDO,
+      :V_ID_USUARIO); end;`;
+    const data = {
+      V_PRECIO_UNIDAD: oferta.precioUnidad,
+      V_KG_UNIDAD:oferta.kgUnidad,
+      V_CANTIDAD:oferta.cantidad,
+      V_FECHA_COSECHA:oferta.fechaCosecha,
+      V_FECHA_CADUCIDAD:oferta.fechaCaducidad,
+      V_ID_PEDIDO:oferta.idPedido,
+      V_ID_USUARIO:oferta.idUsuario
+    };
+
+    const result = cone.execute(sql, data, async (err, response) => {
+      await closeBD(cone);
+      if (err) {
+        console.log(err);
+        res.json({
+          success: false,
+          msg: "" + err,
+          errorNum: err.errorNum,
+        });
+      }
+      if (response) console.log(response);
+      res.status(200).json({
+        success: true,
+        msg: "Oferta Creada Correctamente: ",
+        response,
+      });
+    });
+
+    console.log(result);
+  } catch (error) {
+    return res.json(error);
+  }
+};
+
+//MODIFICAR OFERTA DE PRODUCTO
+exports.modificarOferta = async (req, res) => {
+  try {
+    let oferta = req.body;
+    const cone = await openBD();
+
+    sql = `begin PKG_METODOS.MODIFICAR_OFERTA_P(
+      :V_PRECIO_UNIDAD,
+      :V_KG_UNIDAD,
+      :V_CANTIDAD,
+      :V_FECHA_COSECHA,
+      :V_FECHA_CADUCIDAD,
+      :V_ID_OFERTA); end;`;
+    const data = {
+      V_PRECIO_UNIDAD: oferta.precioUnidad,
+      V_KG_UNIDAD:oferta.kgUnidad,
+      V_CANTIDAD:oferta.cantidad,
+      V_FECHA_COSECHA:oferta.fechaCosecha,
+      V_FECHA_CADUCIDAD:oferta.fechaCaducidad,
+      V_ID_OFERTA:oferta.idOferta
+    };
+
+    const result = cone.execute(sql, data, async (err, response) => {
+      await closeBD(cone);
+      if (err) {
+        console.log(err);
+        res.json({
+          success: false,
+          msg: "" + err,
+          errorNum: err.errorNum,
+        });
+      }
+      if (response) console.log(response);
+      res.status(200).json({
+        success: true,
+        msg: "Oferta Modificada Correctamente: ",
+        response,
+      });
+    });
+
+    console.log(result);
+  } catch (error) {
+    return res.json(error);
+  }
+};
+
+//CANCELAR OFERTA
+exports.cancelarOferta = async (req, res) => {
+  try {
+    let id = req.params.id
+    const cone = await openBD();
+
+    sql = `begin PKG_METODOS.CANCELAR_OFERTA_P(
+      :V_ID_OFERTA); end;`;
+    const data = {
+      V_ID_OFERTA: id
+    };
+
+    const result = cone.execute(sql, data, async (err, response) => {
+      await closeBD(cone);
+      if (err) {
+        console.log(err);
+        res.json({
+          success: false,
+          msg: "" + err,
+          errorNum: err.errorNum,
+        });
+      }
+      if (response) console.log(response);
+      res.status(200).json({
+        success: true,
+        msg: "Oferta Modificada Correctamente: ",
+        response,
+      });
+    });
+
+    console.log(result);
+  } catch (error) {
+    return res.json(error);
+  }
+};

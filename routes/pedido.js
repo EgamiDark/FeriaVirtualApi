@@ -10,7 +10,10 @@ const {
   modificarPedido,
   postPedido,
   getOfertas,
-  getOferta
+  getOferta,
+  ingresarOferta,
+  modificarOferta,
+  cancelarOferta
 } = require("../controllers/pedido");
 
 // Rutas
@@ -22,5 +25,8 @@ router.get('/obtener/disponibles', getPedidosD);
 router.get('/obtener/pedido/:idPedido', getPedidoById);
 router.get('/obtener/todos/usuario/:idUsuario', getPedidosUsuario);
 router.post('/modificar', modificarPedido);
+router.post('/insertarOferta', ingresarOferta);
+router.post('/modificarOferta', modificarOferta);
+router.post('/cancelarOferta/:id', cancelarOferta);
 
 module.exports = router;

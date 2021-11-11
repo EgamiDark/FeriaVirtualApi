@@ -17,10 +17,10 @@ exports.getProductos = async (req, res) => {
     const resultSet = result.outBinds.cursor;
 
     const rows = await resultSet.getRows();
-    let img=[];
+
     for(let i=0;i<rows.length;i++){
       if(rows[i][3]){
-        img.push(rows[i][3].toString());
+        rows[i][3]=rows[i][3].toString();
       }
     }
     if (rows) {
@@ -28,7 +28,7 @@ exports.getProductos = async (req, res) => {
         success: true,
         msg: "Productos obtenidos correctamente",
         rows,
-        img:img,
+
       });
     } else {
       res.json({
@@ -95,7 +95,7 @@ exports.postProducto = async (req, res) => {
   }
 };
 
-// MODIFICAR USUARIO
+// MODIFICAR PRODUCTO
 exports.modificarProducto = async (req, res) => {
   try {
     let producto = req.body;
