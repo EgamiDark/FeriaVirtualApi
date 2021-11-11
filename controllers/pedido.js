@@ -207,12 +207,14 @@ exports.modificarPedido = async (req, res) => {
   try {
     let pedido = req.body;
 
+    console.log(pedido);
+
     const cone = await openBD();
 
     sql = `begin PKG_METODOS.MODIFICAR_PEDIDO(
         :V_ID_PEDIDO, 
         :V_FECHA_SOLICITUD, 
-        :V_FECHAR_TERMINO, 
+        :V_FECHA_TERMINO, 
         :V_CANTIDAD_SOLICITADA, 
         :V_KG_UNIDAD, 
         :V_PRECIO_MAXIMO, 
@@ -223,7 +225,7 @@ exports.modificarPedido = async (req, res) => {
     const data = {
       V_ID_PEDIDO: pedido.idPedido,
       V_FECHA_SOLICITUD: pedido.fechaSolicitud,
-      V_FECHAR_TERMINO: pedido.fechaTermino,
+      V_FECHA_TERMINO: pedido.fechaTermino,
       V_CANTIDAD_SOLICITADA: pedido.cantidadSolicitada,
       V_KG_UNIDAD: pedido.kgUnidad,
       V_PRECIO_MAXIMO: pedido.precioMaximo,
@@ -450,6 +452,41 @@ exports.cancelarOferta = async (req, res) => {
       res.status(200).json({
         success: true,
         msg: "Oferta Modificada Correctamente: ",
+        response,
+      });
+    });
+
+    console.log(result);
+  } catch (error) {
+    return res.json(error);
+  }
+};
+
+//CANCELAR PEDIDO
+exports.cancelarPedido = async (req, res) => {
+  try {
+    const cone = await openBD();
+
+    sql = `begin PKG_METODOS.CANCELAR_PEDIDO(
+      :V_ID_PEDIDO); end;`;
+    const data = {
+      V_ID_PEDIDO: req.params.idPedido
+    };
+
+    const result = cone.execute(sql, data, async (err, response) => {
+      await closeBD(cone);
+      if (err) {
+        console.log(err);
+        res.json({
+          success: false,
+          msg: "" + err,
+          errorNum: err.errorNum,
+        });
+      }
+      if (response) console.log(response);
+      res.status(200).json({
+        success: true,
+        msg: "Pedido cancelado correctamente: ",
         response,
       });
     });
