@@ -15,7 +15,7 @@ const {
   modificarOferta,
   cancelarOferta,
   cancelarPedido,
-  ofertasPByPedido
+  getPedidosT
 } = require("../controllers/pedido");
 
 // Rutas
@@ -23,6 +23,7 @@ router.get('/ofertas/:id', getOfertas);
 router.get('/oferta/:id', getOferta);
 router.get('/obtener/todos', getPedidos);
 router.get('/obtener/disponibles', getPedidosD);
+router.get('/obtener/terminados', getPedidosT);
 router.get('/obtener/:idPedido', getPedidoById);
 router.get('/obtener/todos/usuario/:idUsuario', getPedidosUsuario);
 router.get('/obtener/ofertP/:idPedido', ofertasPByPedido);

@@ -158,3 +158,38 @@ exports.putEstOfertaP = async (req, res) => {
     return res.json(error);
   }
 };
+
+// OBTIENE TODAS LAS VENTAS LOCALES SIN SUBASTAS O CON SUBASTAS CANCELADAS
+exports.getVentasLocalesS = async (req, res) => {
+  try {
+    const cone = await openBD();
+    sql = `begin PKG_METODOS.OBTENER_VENTAS_LOCALES_S(:cursor); end;`;
+
+    const data = {
+      cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
+    };
+
+    const result = await cone.execute(sql, data);
+    const resultSet = result.outBinds.cursor;
+
+    const rows = await resultSet.getRows();
+
+    if (rows) {
+      res.json({
+        success: true,
+        msg: "Ventas Locales obtenidas correctamente",
+        rows,
+      });
+    } else {
+      res.json({
+        success: false,
+        msg: "" + err,
+        errorNum: err.errorNum,
+      });
+    }
+
+    await closeBD(cone);
+  } catch (error) {
+    console.log(error);
+  }
+};
