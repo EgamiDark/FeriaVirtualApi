@@ -15,7 +15,8 @@ const {
   modificarOferta,
   cancelarOferta,
   cancelarPedido,
-  getPedidosT
+  getPedidosT,
+  ofertasPByPedido
 } = require("../controllers/pedido");
 
 // Rutas
