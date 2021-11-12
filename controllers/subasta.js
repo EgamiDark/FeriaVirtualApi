@@ -129,6 +129,131 @@ exports.ingresarSubasta = async (req, res) => {
   }
 };
 
+//MODIFICAR SUBASTA
+exports.modificarSubasta = async (req, res) => {
+  try {
+    let subasta = req.body;
+    const cone = await openBD();
+    
+    sql = `begin PKG_METODOS.MODIFICAR_SUBASTA(
+      :V_ID_SUBASTA,
+      :V_FECHA_TERMINO,
+      :V_ID_TIPO_REFRIG,
+      :V_ID_TIPO_TRANS); end;`;
+    const data = {
+      V_ID_SUBASTA:subasta.idSubastaTrans,
+      V_FECHA_TERMINO:subasta.fechaTermino,
+      V_ID_TIPO_REFRIG:subasta.idTipoRefrig,
+      V_ID_TIPO_TRANS:subasta.idTipoTrans
+    };
+
+
+    const result = cone.execute(sql, data, async (err, response) => {
+      await closeBD(cone);
+      if (err) {
+        console.log(err);
+        res.json({
+          success: false,
+          msg: "" + err,
+          errorNum: err.errorNum,
+        });
+      }
+      if (response) console.log(response);
+      res.status(200).json({
+        success: true,
+        msg: "Subasta Modificada Correctamente: ",
+        response,
+      });
+    });
+
+    console.log(result);
+  } catch (error) {
+    console.log(error);
+    return res.json(error);
+    
+  }
+};
+
+//TERMINAR SUBASTA
+exports.terminarSubasta = async (req, res) => {
+  try {
+    let subasta = req.body;
+    const cone = await openBD();
+    
+    sql = `begin PKG_METODOS.TERMINAR_SUBASTA(
+      :V_ID_SUBASTA,
+      :V_FECHA_TERMINO); end;`;
+    const data = {
+      V_ID_SUBASTA:subasta.idSubastaTrans,
+      V_FECHA_TERMINO:subasta.fechaTermino
+    };
+
+
+    const result = cone.execute(sql, data, async (err, response) => {
+      await closeBD(cone);
+      if (err) {
+        console.log(err);
+        res.json({
+          success: false,
+          msg: "" + err,
+          errorNum: err.errorNum,
+        });
+      }
+      if (response) console.log(response);
+      res.status(200).json({
+        success: true,
+        msg: "Subasta terminada Correctamente: ",
+        response,
+      });
+    });
+
+    console.log(result);
+  } catch (error) {
+    console.log(error);
+    return res.json(error);
+    
+  }
+};
+
+//CANCELAR SUBASTA
+exports.cancelarSubasta = async (req, res) => {
+  try {
+    let subasta = req.body;
+    const cone = await openBD();
+    
+    sql = `begin PKG_METODOS.CANCELAR_SUBASTA(
+      :V_ID_SUBASTA); end;`;
+    const data = {
+      V_ID_SUBASTA:subasta.idSubastaTrans
+    };
+
+
+    const result = cone.execute(sql, data, async (err, response) => {
+      await closeBD(cone);
+      if (err) {
+        console.log(err);
+        res.json({
+          success: false,
+          msg: "" + err,
+          errorNum: err.errorNum,
+        });
+      }
+      if (response) console.log(response);
+      res.status(200).json({
+        success: true,
+        msg: "Subasta Cancelada Correctamente: ",
+        response,
+      });
+    });
+
+    console.log(result);
+  } catch (error) {
+    console.log(error);
+    return res.json(error);
+    
+  }
+};
+
 //INGRESAR OFERTA DE SUBASTA
 exports.ingresarOferta = async (req, res) => {
     try {
