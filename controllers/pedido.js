@@ -295,13 +295,13 @@ exports.modificarPedido = async (req, res) => {
 //CONSULTAR OFERTAS REALIZADAS POR EL USUARIO
 exports.getOfertas = async (req, res) => {
   try {
-    let id = req.params.id
+    let id = req.params.id;
     const cone = await openBD();
     sql = `begin PKG_METODOS.OBTENER_OFERTAS_P(:cursor,:v_id); end;`;
 
     const data = {
       cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
-      v_id:id
+      v_id: id,
     };
 
     const result = await cone.execute(sql, data);
@@ -309,13 +309,13 @@ exports.getOfertas = async (req, res) => {
 
     const rows = await resultSet.getRows();
 
-    if(rows){
+    if (rows) {
       res.json({
         success: true,
         msg: "Ofertas obtenidas correctamente",
         rows,
       });
-    }else{
+    } else {
       res.json({
         success: false,
         msg: "" + err,
@@ -331,39 +331,39 @@ exports.getOfertas = async (req, res) => {
 
 //CONSULTAR OFERTA POR ID
 exports.getOferta = async (req, res) => {
-try {
-  let id = req.params.id
-  const cone = await openBD();
-  sql = `begin PKG_METODOS.OBTENER_OFERTA_P(:cursor,:v_id); end;`;
+  try {
+    let id = req.params.id;
+    const cone = await openBD();
+    sql = `begin PKG_METODOS.OBTENER_OFERTA_P(:cursor,:v_id); end;`;
 
-  const data = {
-    cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
-    v_id:id
-  };
+    const data = {
+      cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
+      v_id: id,
+    };
 
-  const result = await cone.execute(sql, data);
-  const resultSet = result.outBinds.cursor;
+    const result = await cone.execute(sql, data);
+    const resultSet = result.outBinds.cursor;
 
-  const rows = await resultSet.getRows();
+    const rows = await resultSet.getRows();
 
-  if(rows){
-    res.json({
-      success: true,
-      msg: "Oferta obtenida correctamente",
-      rows,
-    });
-  }else{
-    res.json({
-      success: false,
-      msg: "" + err,
-      errorNum: err.errorNum,
-    });
+    if (rows) {
+      res.json({
+        success: true,
+        msg: "Oferta obtenida correctamente",
+        rows,
+      });
+    } else {
+      res.json({
+        success: false,
+        msg: "" + err,
+        errorNum: err.errorNum,
+      });
+    }
+
+    await closeBD(cone);
+  } catch (error) {
+    return res.json(error);
   }
-
-  await closeBD(cone);
-} catch (error) {
-  return res.json(error);
-}
 };
 
 //INGRESAR OFERTA DE PRODUCTO
@@ -372,7 +372,7 @@ exports.ingresarOferta = async (req, res) => {
     let oferta = req.body;
     const cone = await openBD();
 
-    console.log(oferta)
+    console.log(oferta);
     sql = `begin PKG_METODOS.INSERTAR_OFERTA_P(
       :V_PRECIO_UNIDAD,
       :V_KG_UNIDAD,
@@ -383,12 +383,12 @@ exports.ingresarOferta = async (req, res) => {
       :V_ID_USUARIO); end;`;
     const data = {
       V_PRECIO_UNIDAD: oferta.precioUnidad,
-      V_KG_UNIDAD:oferta.kgUnidad,
-      V_CANTIDAD:oferta.cantidad,
-      V_FECHA_COSECHA:oferta.fechaCosecha,
-      V_FECHA_CADUCIDAD:oferta.fechaCaducidad,
-      V_ID_PEDIDO:oferta.idPedido,
-      V_ID_USUARIO:oferta.idUsuario
+      V_KG_UNIDAD: oferta.kgUnidad,
+      V_CANTIDAD: oferta.cantidad,
+      V_FECHA_COSECHA: oferta.fechaCosecha,
+      V_FECHA_CADUCIDAD: oferta.fechaCaducidad,
+      V_ID_PEDIDO: oferta.idPedido,
+      V_ID_USUARIO: oferta.idUsuario,
     };
 
     const result = cone.execute(sql, data, async (err, response) => {
@@ -430,11 +430,11 @@ exports.modificarOferta = async (req, res) => {
       :V_ID_OFERTA); end;`;
     const data = {
       V_PRECIO_UNIDAD: oferta.precioUnidad,
-      V_KG_UNIDAD:oferta.kgUnidad,
-      V_CANTIDAD:oferta.cantidad,
-      V_FECHA_COSECHA:oferta.fechaCosecha,
-      V_FECHA_CADUCIDAD:oferta.fechaCaducidad,
-      V_ID_OFERTA:oferta.idOferta
+      V_KG_UNIDAD: oferta.kgUnidad,
+      V_CANTIDAD: oferta.cantidad,
+      V_FECHA_COSECHA: oferta.fechaCosecha,
+      V_FECHA_CADUCIDAD: oferta.fechaCaducidad,
+      V_ID_OFERTA: oferta.idOferta,
     };
 
     const result = cone.execute(sql, data, async (err, response) => {
@@ -464,13 +464,13 @@ exports.modificarOferta = async (req, res) => {
 //CANCELAR OFERTA
 exports.cancelarOferta = async (req, res) => {
   try {
-    let id = req.params.id
+    let id = req.params.id;
     const cone = await openBD();
 
     sql = `begin PKG_METODOS.CANCELAR_OFERTA_P(
       :V_ID_OFERTA); end;`;
     const data = {
-      V_ID_OFERTA: id
+      V_ID_OFERTA: id,
     };
 
     const result = cone.execute(sql, data, async (err, response) => {
@@ -505,7 +505,7 @@ exports.cancelarPedido = async (req, res) => {
     sql = `begin PKG_METODOS.CANCELAR_PEDIDO(
       :V_ID_PEDIDO); end;`;
     const data = {
-      V_ID_PEDIDO: req.params.idPedido
+      V_ID_PEDIDO: req.params.idPedido,
     };
 
     const result = cone.execute(sql, data, async (err, response) => {
@@ -529,5 +529,51 @@ exports.cancelarPedido = async (req, res) => {
     console.log(result);
   } catch (error) {
     return res.json(error);
+  }
+};
+
+// OBTIENE TODAS LAS OFERTAS PRODUCTOS POR ID DE PEDIDO
+exports.ofertasPByPedido = async (req, res) => {
+  try {
+    const cone = await openBD();
+    sql = `begin PKG_METODOS.OBTENER_OFERTASPR_PEDIDO(
+      :cursor,
+      :V_ID_PEDIDO); 
+      end;`;
+    console.log(req.params);
+    const data = {
+      cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
+      V_ID_PEDIDO: req.params.idPedido,
+    };
+
+    const result = await cone.execute(sql, data);
+    const resultSet = result.outBinds.cursor;
+
+    const rows = await resultSet.getRows();
+
+    if (rows) {
+      if (rows.length > 0) {
+        res.json({
+          success: true,
+          msg: "Ofertas productos obtenidas correctamente!",
+          rows,
+        });
+      } else {
+        res.json({
+          success: false,
+          msg: "No hay ofertas",
+        });
+      }
+    } else {
+      res.json({
+        success: false,
+        msg: "" + err,
+        errorNum: err.errorNum,
+      });
+    }
+
+    await closeBD(cone);
+  } catch (error) {
+    console.log(error);
   }
 };

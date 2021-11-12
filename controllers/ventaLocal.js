@@ -36,6 +36,46 @@ exports.getOfertasVentaLocal = async (req, res) => {
   }
 };
 
+// OBTIENE TODOS LAS VENTAS LOCALES DE UN USUARIO
+exports.getVentasLocalesUsuario = async (req, res) => {
+  try {
+    const cone = await openBD();
+
+    sql = `begin PKG_METODOS.VENTAS_LOCALES_USUARIO(
+      :cursor,
+      :V_ID_USUARIO); 
+      end;`;
+
+    const data = {
+      cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
+      V_ID_USUARIO: req.params.idUsuario
+    };
+
+    const result = await cone.execute(sql, data);
+    const resultSet = result.outBinds.cursor;
+
+    const rows = await resultSet.getRows();
+
+    if (rows) {
+      res.json({
+        success: true,
+        msg: "Ventas locales usuarios obtenidas correctamente!",
+        rows,
+      });
+    } else {
+      res.json({
+        success: false,
+        msg: "" + err,
+        errorNum: err.errorNum,
+      });
+    }
+
+    await closeBD(cone);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // INSERTAR VENTA LOCAL
 exports.postVentaLocal = async (req, res) => {
   try {
