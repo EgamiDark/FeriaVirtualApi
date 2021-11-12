@@ -14,7 +14,8 @@ const {
   ingresarOferta,
   modificarOferta,
   cancelarOferta,
-  cancelarPedido
+  cancelarPedido,
+  getPedidosT
 } = require("../controllers/pedido");
 
 // Rutas
@@ -23,6 +24,7 @@ router.get('/oferta/:id', getOferta);
 router.post('/insertar', postPedido);
 router.get('/obtener/todos', getPedidos);
 router.get('/obtener/disponibles', getPedidosD);
+router.get('/obtener/terminados', getPedidosT);
 router.get('/obtener/:idPedido', getPedidoById);
 router.get('/obtener/todos/usuario/:idUsuario', getPedidosUsuario);
 router.post('/modificar', modificarPedido);

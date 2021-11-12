@@ -144,7 +144,7 @@ exports.postTransporte = async (req, res) => {
       V_PATENTE: transporte.patente,
       V_TAMANIO: transporte.tamanio,
       V_CAPACIDAD: transporte.capacidadCarga,
-      V_ACTIVIDAD: transporte.actividad,
+      V_ACTIVIDAD: 1,
       V_ID_TIPO_REFRIG: transporte.idTipoRefrig,
       V_ID_TIPO_TRANS: transporte.idTipoTrans,
       V_ID_USUARIO: transporte.idUsuario,
