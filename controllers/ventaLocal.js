@@ -235,3 +235,88 @@ exports.getOfertasProductos = async (req, res) => {
     console.log(error);
   }
 };
+
+// OBTIENE TODOS LOS ESTADO DE VENTA
+exports.getEstadosVentas= async (req, res) => {
+  try {
+    const cone = await openBD();
+    sql = `begin PKG_METODOS.OBTENER_EST_VENTA(:cursor); end;`;
+
+    const data = {
+      cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
+    };
+
+    const result = await cone.execute(sql, data);
+    const resultSet = result.outBinds.cursor;
+
+    const rows = await resultSet.getRows();
+
+    if (rows) {
+      if (rows.length > 0) {
+        res.json({
+          success: true,
+          msg: "Estados de ventas obtenidos correctamente",
+          rows
+        });
+      } else {
+        res.json({
+          success: false,
+          msg: "No hay estados de venta"
+        });
+      }
+    } else {
+      res.json({
+        success: false,
+        msg: "" + err,
+        errorNum: err.errorNum
+      });
+    }
+
+    await closeBD(cone);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// CANCELA UNA VENTA LOCAL Y CAMBIA DE ESTADO LA OFERTA PRODUCTO RELACIONADA CON LA VL
+exports.cancelarVentaLocal = async (req, res) => {
+  try {
+    let ventaLocal = req.body;
+    console.log(ventaLocal)
+
+    const cone = await openBD();
+
+    sql = `begin PKG_METODOS.CANCELAR_VENTALOCAL(
+        :V_ID_VENTA_LOCAL,
+        :V_ID_OFERTA_PRODUCTO
+        ); end;`;
+
+    const data = {
+      V_ID_VENTA_LOCAL: ventaLocal.idVentaLocal,
+      V_ID_OFERTA_PRODUCTO: ventaLocal.idOfertaProd
+    };
+
+    cone.execute(sql, data, async (err, response) => {
+      await closeBD(cone);
+      if (err) {
+        console.log(err);
+        res.json({
+          success: false,
+          msg: "" + err,
+          errorNum: err.errorNum,
+        });
+      }
+      if (response) {
+        res.json({
+          success: true,
+          msg: "Venta local cancelada correctamente",
+          response,
+        });
+      }
+    });
+
+  } catch (error) {
+    console.log(error);
+    return res.json(error);
+  }
+}
