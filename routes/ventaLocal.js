@@ -10,10 +10,12 @@ const {
   getVentasLocalesUsuario,
   getOfertasProductos,
   getEstadosVentas,
-  cancelarVentaLocal
+  cancelarVentaLocal,
+  getVentasLocalesWeb
 } = require("../controllers/ventaLocal");
 
 // Rutas
+router.get("/ofertasVL", getOfertasVentaLocal);
 router.get("/aSubastar", getVentasLocalesS);
 router.post("/guardar", postVentaLocal);
 router.get("/ofertasVL", getOfertasVentaLocal);
@@ -22,5 +24,6 @@ router.post("/ofertaVL/cancelar", cancelarVentaLocal);
 router.get("/todos/estadosVenta", getEstadosVentas);
 router.get("/todos/usuario/:idUsuario", getVentasLocalesUsuario);
 router.get("/todos/ofertasProductos", getOfertasProductos);
+router.get("/todos/ventasLocalesWeb", getVentasLocalesWeb);
 
 module.exports = router;
