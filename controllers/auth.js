@@ -16,13 +16,13 @@ exports.getRol = async (req, res) => {
 
     const rows = await resultSet.getRows();
 
-    if(rows){
+    if (rows) {
       res.json({
         success: true,
         msg: "Roles obtenidos correctamente",
         rows,
       });
-    }else{
+    } else {
       res.json({
         success: false,
         msg: "" + err,
@@ -39,14 +39,14 @@ exports.getRol = async (req, res) => {
 //LOGIN
 exports.login = async (req, res) => {
   try {
-    let user = req.body
+    let user = req.body;
     const cone = await openBD();
     sql = `begin PKG_METODOS.LOGIN(:cursor,:email,:contrasenia); end;`;
 
     const data = {
       cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
-      email:user.email,
-      contrasenia:user.contrasenia,
+      email: user.email,
+      contrasenia: user.contrasenia,
     };
 
     const result = await cone.execute(sql, data);
@@ -54,13 +54,13 @@ exports.login = async (req, res) => {
 
     const rows = await resultSet.getRows();
 
-    if(rows){
+    if (rows) {
       res.json({
         success: true,
         msg: "Usuario obtenido correctamente",
         rows,
       });
-    }else{
+    } else {
       res.json({
         success: false,
         msg: "" + err,
@@ -131,9 +131,9 @@ exports.modificarUsuario = async (req, res) => {
     let user = req.body;
     var activo;
 
-    if(user.actividad){
+    if (user.actividad) {
       activo = 1;
-    }else{
+    } else {
       activo = 0;
     }
 
@@ -201,13 +201,13 @@ exports.getUsuarios = async (req, res) => {
 
     const rows = await resultSet.getRows();
 
-    if(rows){
+    if (rows) {
       res.json({
         success: true,
         msg: "Usuarios obtenidos correctamente",
         rows,
       });
-    }else{
+    } else {
       res.json({
         success: false,
         msg: "" + err,
@@ -224,13 +224,13 @@ exports.getUsuarios = async (req, res) => {
 //OBTENER USUARIO
 exports.getUsuario = async (req, res) => {
   try {
-    let id = req.params.id
+    let id = req.params.id;
     const cone = await openBD();
     sql = `begin PKG_METODOS.OBTENER_USUARIO(:cursor,:id); end;`;
 
     const data = {
       cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
-      id:id
+      id: id,
     };
 
     const result = await cone.execute(sql, data);
@@ -238,13 +238,13 @@ exports.getUsuario = async (req, res) => {
 
     const rows = await resultSet.getRows();
 
-    if(rows){
+    if (rows) {
       res.json({
         success: true,
         msg: "Usuario obtenido correctamente",
         rows,
       });
-    }else{
+    } else {
       res.json({
         success: false,
         msg: "" + err,
@@ -261,13 +261,13 @@ exports.getUsuario = async (req, res) => {
 //VALIDAR EXISTENCIA DE EMAIL
 exports.getValidarEmail = async (req, res) => {
   try {
-    let email = req.params.email
+    let email = req.params.email;
     const cone = await openBD();
     sql = `begin PKG_METODOS.VALIDAR_EMAIL(:cursor,:email); end;`;
 
     const data = {
       cursor: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
-      email:email
+      email: email,
     };
 
     const result = await cone.execute(sql, data);
@@ -275,13 +275,20 @@ exports.getValidarEmail = async (req, res) => {
 
     const rows = await resultSet.getRows();
 
-    if(rows){
-      res.json({
-        success: true,
-        msg: "Email obtenido correctamente",
-        rows,
-      });
-    }else{
+    if (rows) {
+      if (rows.length > 0) {
+        res.json({
+          success: true,
+          msg: "Email obtenido correctamente",
+          rows,
+        });
+      } else {
+        res.json({
+          success: false,
+          msg: "Email no encontrado",
+        });
+      }
+    } else {
       res.json({
         success: false,
         msg: "" + err,
