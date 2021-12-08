@@ -301,16 +301,14 @@ exports.modificarOferta = async (req, res) => {
     try {
       let oferta = req.body;
       const cone = await openBD();
-  
+      
       sql = `begin PKG_METODOS.MODIFICAR_OFERTA_S(
         :V_PRECIO_OFERTA,
-        :V_CANTIDAD_TRANSPORTE,
         :V_FECHA_ENTREGA,
         :V_PATENTE,
         :V_ID_OFERTA); end;`;
       const data = {
         V_PRECIO_OFERTA: oferta.precioOferta,
-        V_CANTIDAD_TRANSPORTE: oferta.cantidadTransporte,
         V_FECHA_ENTREGA: oferta.fechaEntrega,
         V_PATENTE: oferta.patente,
         V_ID_OFERTA: oferta.idOferta
