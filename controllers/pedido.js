@@ -409,7 +409,6 @@ exports.ingresarOferta = async (req, res) => {
       });
     });
 
-    console.log(result);
   } catch (error) {
     return res.json(error);
   }
@@ -455,7 +454,6 @@ exports.modificarOferta = async (req, res) => {
       });
     });
 
-    console.log(result);
   } catch (error) {
     return res.json(error);
   }
@@ -490,8 +488,6 @@ exports.cancelarOferta = async (req, res) => {
         response,
       });
     });
-
-    console.log(result);
   } catch (error) {
     return res.json(error);
   }
@@ -526,7 +522,40 @@ exports.cancelarPedido = async (req, res) => {
       });
     });
 
-    console.log(result);
+  } catch (error) {
+    return res.json(error);
+  }
+};
+
+//TERMINAR PEDIDO
+exports.terminarPedido = async (req, res) => {
+  try {
+    const cone = await openBD();
+
+    sql = `begin PKG_METODOS.TERMINAR_PEDIDO(
+      :V_ID_PEDIDO); end;`;
+    const data = {
+      V_ID_PEDIDO: req.params.idPedido,
+    };
+
+    const result = cone.execute(sql, data, async (err, response) => {
+      await closeBD(cone);
+      if (err) {
+        console.log(err);
+        res.json({
+          success: false,
+          msg: "" + err,
+          errorNum: err.errorNum,
+        });
+      }
+      if (response) console.log(response);
+      res.status(200).json({
+        success: true,
+        msg: "Pedido cancelado correctamente: ",
+        response,
+      });
+    });
+
   } catch (error) {
     return res.json(error);
   }

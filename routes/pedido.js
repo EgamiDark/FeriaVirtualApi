@@ -16,7 +16,8 @@ const {
   cancelarOferta,
   cancelarPedido,
   getPedidosT,
-  ofertasPByPedido
+  ofertasPByPedido,
+  terminarPedido
 } = require("../controllers/pedido");
 
 // Rutas
@@ -34,5 +35,6 @@ router.post('/insertarOferta', ingresarOferta);
 router.post('/modificarOferta', modificarOferta);
 router.post('/cancelarOferta/:id', cancelarOferta);
 router.post('/cancelarPedido/:idPedido', cancelarPedido);
+router.post('/terminarPedido/:idPedido', terminarPedido);
 
 module.exports = router;
