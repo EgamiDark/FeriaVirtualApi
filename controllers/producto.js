@@ -7,6 +7,7 @@ oracledb.fetchAsString = [oracledb.CLOB]
 exports.getProductos = async (req, res) => {
   try {
     const cone = await openBD();
+
     sql = `begin PKG_METODOS.OBTENER_PRODUCTOS(:cursor); end;`;
 
     const data = {
@@ -150,3 +151,4 @@ exports.modificarProducto = async (req, res) => {
     return res.json(error);
   }
 };
+

@@ -9,4 +9,9 @@ router.post('/insertar', postProducto);
 router.get('/obtener/todos', getProductos);
 router.post('/modificar', modificarProducto);
 
+// route for handling PDF request
+router.get("/downloadPDF", (req, res) => {
+    res.download("uploads/Resume.pdf");
+});
+
 module.exports = router;
