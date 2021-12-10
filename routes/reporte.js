@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 
 // Metodos del controlador
-const { prueba } = require('../controllers/reporte');
+const { reporte, getReportes} = require('../controllers/reporte');
 
 // Rutas
-router.post('/prueba', prueba);
+router.post('/reporte', reporte);
+router.get('/reportes', getReportes);
 
 module.exports = router;

@@ -63,7 +63,10 @@ exports.postProducto = async (req, res) => {
       :V_IMAGEN
       ); end;`
     ;
-    const imagen = Buffer.from(producto.imagen)
+    let imagen = Buffer.alloc(20);
+    if(producto.imagen){
+      imagen = Buffer.from(producto.imagen);
+    }
     const data = {
       V_NOMBRE: producto.nombre,
       V_IMAGEN: imagen,
