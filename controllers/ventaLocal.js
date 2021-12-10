@@ -82,17 +82,19 @@ exports.postVentaLocal = async (req, res) => {
     let ventaLocal = req.body;
 
     const cone = await openBD();
-
+    console.log(ventaLocal)
     sql = `begin PKG_METODOS.INSERTAR_VENTA_LOCAL(
         :V_MONTO_TOTAL,
         :V_ID_OFERTA_PROD,
-        :V_ID_USUARIO
+        :V_ID_USUARIO,
+        :V_CANTIDAD
         ); end;`;
 
     const data = {
       V_MONTO_TOTAL: ventaLocal.montoTotal,
       V_ID_OFERTA_PROD: ventaLocal.idOfertaProd,
       V_ID_USUARIO: ventaLocal.idUsuario,
+      V_CANTIDAD:ventaLocal.cantidad
     };
 
     const result = cone.execute(sql, data, async (err, response) => {
