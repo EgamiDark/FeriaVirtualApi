@@ -23,6 +23,12 @@ exports.getContratos = async (req, res) => {
 
     const rows = await resultSet.getRows();
 
+    for(let i=0;i<rows.length;i++){
+      if(rows[i][4]){
+        rows[i][4]=rows[i][4].toString();
+      }
+    }
+
     if (rows) {
       if (rows.length > 0) {
         res.json({
@@ -105,6 +111,7 @@ exports.insertarContrato = async (req, res) => {
     let contrato = req.body;
     console.log(contrato)
     const cone = await openBD();
+    res.
 
     sql = `begin PKG_METODOS.INSERTAR_CONTRATO(
       :V_FECHA_CREACION,
@@ -146,3 +153,20 @@ exports.insertarContrato = async (req, res) => {
     return res.json(error);
   }
 };
+
+exports.descargarPDFContrato = async(req, res) =>{
+  try {
+    console.log(req.params.pdf)
+    var fileData = new Buffer.from(req.params.pdf);
+    res.writeHead(200, {
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'attachment; filename=data.pdf',
+      'Content-Length': fileData.length
+    });
+    res.write(fileData);
+    res.end();
+  } catch (error) {
+    console.log(error);
+    return res.json(error);
+  }
+}
