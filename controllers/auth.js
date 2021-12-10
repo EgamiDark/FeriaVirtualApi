@@ -70,7 +70,7 @@ exports.login = async (req, res) => {
 
     await closeBD(cone);
   } catch (error) {
-    return res.json(error);
+    return res.json({success:false,msg:""+ error});
   }
 };
 
@@ -217,7 +217,7 @@ exports.getUsuarios = async (req, res) => {
 
     await closeBD(cone);
   } catch (error) {
-    return res.json(error);
+    return res.json({success:false,msg:""+ error});
   }
 };
 

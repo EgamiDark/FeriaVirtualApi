@@ -22,6 +22,7 @@ app.use('/api/contrato', require('./routes/contrato'));
 app.use('/api/subasta', require('./routes/subasta'));
 app.use('/api/datosFk', require('./routes/datosFk'));
 app.use('/api/ventaLocal', require('./routes/ventaLocal'));
+app.use('/api/reporte', require('./routes/reporte'));
 
 //port
 const port = process.env.PORT;
