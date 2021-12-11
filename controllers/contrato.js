@@ -111,7 +111,6 @@ exports.insertarContrato = async (req, res) => {
     let contrato = req.body;
     console.log(contrato)
     const cone = await openBD();
-    res.
 
     sql = `begin PKG_METODOS.INSERTAR_CONTRATO(
       :V_FECHA_CREACION,
